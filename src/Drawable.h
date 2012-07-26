@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <string>
+
 
 class LinkListable
 {
@@ -46,22 +48,19 @@ private:
 	int size;
 };
 
-class HasVisibility
-{
-public:
-	bool visible;
-
-	HasVisibility()
-	{
-		visible = true;
-	}
-};
-
-class Drawable :	public LinkListable, public HasVisibility, 
+class Drawable :	public LinkListable, 
 					public sf::Drawable, public sf::Transformable
 {
 friend class DrawList;
+public:
+	bool visible;
+	sf::String name;
 
+	Drawable()
+	{
+		visible = true;
+		name = "";
+	}
 };
 
 /*
@@ -112,22 +111,40 @@ public:
 
 // quick mix-in of SFML classes, to avoid wrapper dilemma
 
-class Sprite :	public LinkListable, public HasVisibility,
-				public sf::Sprite
+class Sprite :	public Drawable
 {
+public:
+	sf::Sprite sf;
 
+private:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{	target.draw( sf, states );	}
 };
 
-class RectangleShape :	public LinkListable, public HasVisibility,
-						public sf::RectangleShape
+class RectangleShape :	public Drawable
 {
+public:
+	sf::RectangleShape sf;
+	
+//	void setSize(const sf::Vector2f &size)
+//	{	sf.setSize( size );	}
 
+private:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{	target.draw( sf, states );	}
 };
 
-class Text :	public LinkListable, public HasVisibility,
-				public sf::Text
+class Text :	public Drawable
 {
+public:
+	sf::Text sf;
 
+//	void setString( const String &string )
+//	{	sf.setString( string );	}
+
+private:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{	target.draw( sf, states );	}
 };
 
 #endif

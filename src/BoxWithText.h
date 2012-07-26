@@ -19,19 +19,20 @@ public:
 		this->setPosition( x, y );
 
 		
-		rect.setSize( sf::Vector2f(width, height) );
-		rect.setPosition(0,0);
-		words.setString("hello");
-		words.setColor( sf::Color( 255, 0, 0 ) );
+		rect.sf.setSize( sf::Vector2f(width, height) );
+		rect.sf.setPosition(0,0);
+		words.sf.setString( text );
+		words.sf.setColor( sf::Color( 255, 0, 0 ) );
 
 		add( &rect );
 		add( &words );
 
 	}
 
-private:
 	RectangleShape rect;
 	Text words;
+
+private:
 /*
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{

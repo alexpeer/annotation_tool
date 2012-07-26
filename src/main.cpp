@@ -75,6 +75,8 @@ int main()
 		//App.draw( scene );
 
 		BoxWithText box( 300 ,50, 300, 100);
+		box.name = "box";
+		box.words.sf.setString( "Hallo" );
 
 		App.draw( box );
 

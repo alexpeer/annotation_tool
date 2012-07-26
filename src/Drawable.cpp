@@ -120,18 +120,17 @@
 	{
 
 		const LinkListable *cursor = (LinkListable*)getHead();
-		const sf::Drawable *drawable = (sf::Drawable*)cursor;
+		const Drawable *drawable = (Drawable*)cursor;
 
 		states.transform.combine( this->getTransform() );
 
 		while( cursor != NULL )
 		{
-			if(((HasVisibility*)cursor)->visible)
+			drawable = (Drawable*)cursor;
+			if( drawable->visible )
 				target.draw( *drawable, states );
 
 			cursor = cursor->next;
-
-			glPopMatrix();
 		}
 
 	}
