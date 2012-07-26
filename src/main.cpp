@@ -4,6 +4,7 @@
 #include <SFML/OpenGL.hpp>
 
 #include "BoxWithText.h"
+#include "Timeline.h"
 
 #include <cstdio>  // For ddebug / stdout
 
@@ -79,6 +80,10 @@ int main()
 		box.words.sf.setString( "Hallo" );
 
 		App.draw( box );
+
+		Timeline timeline;
+		App.draw( timeline );
+		//TODO: make "Interface" class to encapsulate main drawing / UI logic
 
         // draw app
 		App.display();

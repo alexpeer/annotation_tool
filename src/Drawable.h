@@ -34,7 +34,7 @@ public:
 
 	void add( LinkListable &thing )
 	{
-//		add( &thing );
+		add( &thing );
 	}
 
 	void remove( LinkListable *thing );
@@ -118,7 +118,7 @@ public:
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{	target.draw( sf, states );	}
+	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
 };
 
 class RectangleShape :	public Drawable
@@ -131,7 +131,7 @@ public:
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{	target.draw( sf, states );	}
+	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
 };
 
 class Text :	public Drawable
@@ -144,7 +144,7 @@ public:
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{	target.draw( sf, states );	}
+	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
 };
 
 #endif

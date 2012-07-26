@@ -12,7 +12,7 @@ class BoxWithText :  public DrawList
 public:
 	//char * stl::String text;		
 
-	BoxWithText( int x, int y, int width, int height, char * text = NULL )
+	BoxWithText( int x = 0, int y = 0, int width = 100, int height = 40, char * text = NULL )
 	{
 		sf::Sprite();
 
