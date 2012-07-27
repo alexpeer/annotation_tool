@@ -19,10 +19,51 @@ public:
 	}
 };
 
-// th tickmarks area is where current / max time will be denoted; most stream nav actions will happen here
+// the tickmarks area is where current / max time will be denoted; most stream nav actions will happen here
 class Timeline_Tickmarks : public DrawList
 {
+public:
+	Text startTime;
+	Text endTime;
 
+
+	Timeline_Tickmarks()
+	{
+		startTime.sf.setString("00:00:00");
+		endTime.sf.setString("60:00:00");
+
+		startTime.sf.setCharacterSize( 11 );
+		endTime.sf.setCharacterSize( 11 );
+
+		background.sf.setFillColor( sf::Color( 80, 80, 80 ) );
+
+		add(background);
+		add(startTime);
+		add(endTime);
+
+		resize( 700 );
+		height = 50;
+		
+		
+	}
+
+	void resize( float w )
+	{
+
+		width = w;
+
+		//startTime.setPosition( 0, height - startTime.sf.getLocalBounds().height );
+		startTime.setPosition( 0, height - startTime.sf.getCharacterSize() );
+		endTime.setPosition( width - endTime.sf.getLocalBounds().width, height - endTime.sf.getLocalBounds().height );
+
+		background.sf.setSize( sf::Vector2f( width, height ) );
+		
+	}
+
+	float width, height;
+	
+private:
+	RectangleShape background;
 };
 
 
@@ -49,6 +90,10 @@ public:
 		height = h;
 		
 		background.sf.setSize( sf::Vector2f( width, height ) );
+
+		tickmarks.height = 50;
+		tickmarks.setPosition( 0, height - tickmarks.height );
+		tickmarks.resize( w );
 
 		//TODO: resize all components
 	}

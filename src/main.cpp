@@ -5,6 +5,7 @@
 
 #include "BoxWithText.h"
 #include "Timeline.h"
+#include "Video.h"
 
 #include <cstdio>  // For ddebug / stdout
 
@@ -80,6 +81,9 @@ int main()
 		box.words.sf.setString( "Hallo" );
 
 		App.draw( box );
+
+		Video vid;
+		App.draw( vid );
 
 		Timeline timeline;
 		App.draw( timeline );
