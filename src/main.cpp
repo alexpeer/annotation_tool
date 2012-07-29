@@ -3,7 +3,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include "BoxWithText.h"
+#include "generic-ui/ui.h"
 #include "Timeline.h"
 #include "Video.h"
 
@@ -12,7 +12,7 @@
 
 int main()
 {
-	int viewWidth = 800;
+	int viewWidth = 1000;
 	int viewHeight = 800;
  
     // Create the main window
@@ -21,6 +21,16 @@ int main()
    // Create a clock for measuring time elapsed
     sf::Clock Clock;	
 	Clock.restart();
+	
+	Video vid;
+	//vid.openFile( "bubbles.avi" );
+	//vid.openFile( "test-bubbles.avi" );
+	vid.openFile( "test-eye_tracker.avi ");
+	//vid.openFile( "sample_for_annotator_00000.avi" );
+	// mencoder in.avi -ovc raw -vf format=i420 -o out.avi 
+	//vid.openFile( "" );
+	vid.play();
+	// mencoder sample.avi -ovc raw -vf format=i420 -oac copy -o out.avi
 
     // Start draw loop
 	while (App.isOpen())
@@ -82,7 +92,7 @@ int main()
 
 		App.draw( box );
 
-		Video vid;
+		vid.update();
 		App.draw( vid );
 
 		Timeline timeline;

@@ -1,0 +1,8 @@
+
+/Debug
+/opencv
+/SFML-2.0-rc
+/ipch
+/Debug
+*.opensdf
+*.sdf
