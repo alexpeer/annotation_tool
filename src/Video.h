@@ -195,16 +195,17 @@ public:
 		return location;
 	}
 
-	void update()
+	void update( double elapsed_milliseconds )
 	{
 		if( ! isPlaying )
 			return;
 
-		sf::Time elapsed = playTimer.getElapsedTime();
+		//sf::Time elapsed_milliseconds = playTimer.getElapsedTime().asMilliseconds();
 
-		millis_since_last_frame = elapsed.asMilliseconds();
 
-		total_elapsed_playtime += elapsed.asMilliseconds();
+		millis_since_last_frame = elapsed_milliseconds;
+
+		total_elapsed_playtime += elapsed_milliseconds;
 
 		if( millis_since_last_frame < millis_per_frame )
 			return;

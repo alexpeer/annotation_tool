@@ -12,11 +12,21 @@ public:
 	virtual void stop() = NULL;
 
 	virtual void seek( double milliseconds ) = NULL;
-	virtual void update( double elapsedTime ) = NULL;
+	virtual void update( double elapsed_milliseconds ) = NULL;
 
 	// all times should be in milliseconds
 	virtual double getDuration() = NULL;
 	virtual double getCurrentPosition() = NULL;
+
+	enum StreamType
+	{
+		VIDEO,
+		AUDIO,
+		TEXT,
+		OVERLAY
+	};
+
+	StreamType type;
 
 private:
 
@@ -26,22 +36,31 @@ private:
 class VideoStream : public Stream
 {
 public:
+	VideoStream()	{	type = VIDEO;	}
 
 	void play()	{	video.play();	}
 	void stop()	{	video.stop();	}
 	void seek( double milliseconds )
 	{
-		result_millis = video.seek_millis( milliseconds );
+		double result_millis = video.seek_millis( milliseconds );
 		if( result_millis != milliseconds )
 		{
 			printf( "WARNING: stream seek: result not exact, off by: %d", result_millis - milliseconds );
 		}
 	}
 
-	double getDuration()		{	return video.length;	}
-	double getCurrentPosition	{	return video.location;	}
+	void update( double elapsed_milliseconds )
+	{
+		video.update( elapsed_milliseconds );
+	}
 
-private:
+	double getDuration()		{	return video.duration;	}
+	double getCurrentPosition()	{	return video.location;	}
+
+	bool open( char* filename )
+	{
+		return video.openFile( filename );
+	}
 
 	Video video;
 
@@ -50,6 +69,7 @@ private:
 class AudioStream : public Stream
 {
 public:
+	AudioStream()	{	type = AUDIO;	}
 
 	void play() {	audio.play();	}
 	void stop()	{	audio.pause();	}
@@ -62,19 +82,57 @@ public:
 			audio.play();
 			audio.pause();
 		}
-		audio.setPlayingOffset( sf::Time( milliseconds * 1000 ) );
+		audio.setPlayingOffset(  sf::milliseconds( milliseconds ) );
 	}
 
-	double getDuration()		{	return audio.length;	}
-	double getCurrentPosition	{	return video.location;	}
+	void update( double elapsed_milliseconds )
+	{	;	}
+
+	double getDuration()		{	return audio.getDuration().asMilliseconds();		}
+	double getCurrentPosition()	{	return audio.getPlayingOffset().asMilliseconds();	}
+	
+	bool open( char* filename )
+	{
+		return audio.openFromFile( filename );
+	}
 
 private:
 	sf::Music audio;
 
 };
 
-class EventStream : public Stream
+class TextStream : public Stream
 {
+public:
+	TextStream()	{	type = TEXT;	}
+
+	virtual void play()
+	{
+		;
+	}
+	virtual void stop()
+	{
+		;
+	}
+
+	virtual void seek( double milliseconds )
+	{
+		;
+	}
+	virtual void update( double elapsed_milliseconds )
+	{
+		;
+	}
+
+	// all times should be in milliseconds
+	virtual double getDuration()
+	{
+		;
+	}
+	virtual double getCurrentPosition()
+	{
+		;
+	}
 
 };
 

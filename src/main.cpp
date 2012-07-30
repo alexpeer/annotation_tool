@@ -8,6 +8,8 @@
 #include "Video.h"
 #include "Stream.h"
 
+#include "TheAnnotator.h"
+
 #include <cstdio>  // For ddebug / stdout
 
 
