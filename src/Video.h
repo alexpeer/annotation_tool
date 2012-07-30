@@ -203,13 +203,13 @@ public:
 		//sf::Time elapsed_milliseconds = playTimer.getElapsedTime().asMilliseconds();
 
 
-		millis_since_last_frame = elapsed_milliseconds;
+		millis_since_last_frame += elapsed_milliseconds;
 
 		total_elapsed_playtime += elapsed_milliseconds;
 
 		if( millis_since_last_frame < millis_per_frame )
 			return;
-		playTimer.restart();
+		//playTimer.restart();
 
 		float curr_pos = location;
 

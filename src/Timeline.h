@@ -90,6 +90,11 @@ public:
 		setWordsToMillis( milliseconds, endTime );
 	}
 
+	double get_endTime( )
+	{
+		return endTime_millis;
+	}
+
 	void setWordsToMillis( const double &millis, Text &words )
 	{
 		char buffer[9];
@@ -161,6 +166,11 @@ public:
 	void set_endTime( double milliseconds )
 	{
 		tickmarks.set_endTime( milliseconds );
+	}
+
+	double get_endTime()
+	{
+		return tickmarks.get_endTime();
 	}
 
 private:

@@ -23,10 +23,11 @@ public:
 		bool didWork = video->open( filename );
 		if( ! didWork )
 			return false;
+		
+		video_area.add( video->video );
 
-		
-		
 		streams.push_back( video );
+		updateLongestDuration( video->getDuration() );
 		return true;
 	}
 
@@ -38,7 +39,44 @@ public:
 			return false;
 		
 		streams.push_back( audio );
+		updateLongestDuration( audio->getDuration() );
 		return true;
+	}
+
+	//when adding streams, check to see if it is the new longest
+	void updateLongestDuration( double newDuration )
+	{
+		if( timeline.get_endTime() < newDuration )
+			timeline.set_endTime( newDuration );
+		//TODO: need similar func for when removing, that checks all streams
+	}
+
+	void play()
+	{			
+		std::list<Stream*>::iterator it;
+		for( it = streams.begin(); it != streams.end(); ++it )
+		{
+			(*it)->play();
+		}
+	}
+
+	void stop()
+	{		
+		std::list<Stream*>::iterator it;
+		for( it = streams.begin(); it != streams.end(); ++it )
+		{
+			(*it)->stop();
+		}
+	}
+
+	void seek( double milliseconds )
+	{
+
+	}
+
+	void seek_percentage( double milliseconds )
+	{
+
 	}
 	
 // update stuff
@@ -56,6 +94,7 @@ public:
 			(*it)->update( elapsed );
 		}
 
+		timeline.update_cursor( (*(streams.begin()))->getCurrentPosition() );
 	}
 
 // draw stuff
@@ -66,18 +105,21 @@ public:
 
 	Timeline timeline;
 
-	void init_draw(int width, int height)
+	void init_draw()
 	{
 		canvas.add(video_area);
 		canvas.add(text_area);
 		canvas.add(timeline);
-
-		resize( width, height);
 	}
 
 	void resize( int width, int height )
 	{
-		
+		;
+	}
+
+	TheAnnotator()
+	{
+		init_draw();
 	}
 
 // cleanup stuff

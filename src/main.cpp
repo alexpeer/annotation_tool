@@ -22,9 +22,13 @@ int main()
     sf::RenderWindow App(sf::VideoMode(viewWidth, viewHeight, 32), "Annotation Tool");
 	
    // Create a clock for measuring time elapsed
-    sf::Clock Clock;	
+    sf::Clock Clock;
 	Clock.restart();
 	
+	TheAnnotator annotator;
+	annotator.resize( viewWidth, viewHeight );
+
+	/*
 	Timeline timeline;
 
 	Video vid;
@@ -41,6 +45,11 @@ int main()
 
 	//TODO: add stream to timeline instead, handle this internally
 	timeline.set_endTime( vid.duration );
+	*/
+
+	annotator.addVideoStream( "test-eye_tracker.avi" );
+	
+	annotator.play();
 
     // Start draw loop
 	while (App.isOpen())
@@ -68,47 +77,51 @@ int main()
         }
 
 		
-		bool leftButtonDown		= sf::Mouse::isButtonPressed(sf::Mouse::Left);
-		unsigned int mouseX		= sf::Mouse::getPosition().x;
-        unsigned int mouseY		= sf::Mouse::getPosition().y;
-		bool isSpacePressed		= sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-		bool isAPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-		bool isSPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+//		bool leftButtonDown		= sf::Mouse::isButtonPressed(sf::Mouse::Left);
+//		unsigned int mouseX		= sf::Mouse::getPosition().x;
+//        unsigned int mouseY		= sf::Mouse::getPosition().y;
+//		bool isSpacePressed		= sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+//		bool isAPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+//		bool isSPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 		
-		if(isSpacePressed)
-		{
-			;
-		}
+//		if(isSpacePressed)
+//		{
+//			;
+//		}
 
 
         // Set the active window before draw
 		App.setActive();
 
-		sf::CircleShape circle;
-		int radius = 20;
-		circle.setRadius(radius);
-		circle.setOutlineColor(sf::Color::Red);
-		circle.setOutlineThickness(5);
-		sf::Vector2i mousePos = sf::Mouse::getPosition(App);
-		circle.setPosition(mousePos.x-radius/2, mousePos.y-radius/2);
+//		sf::CircleShape circle;
+//		int radius = 20;
+//		circle.setRadius(radius);
+//		circle.setOutlineColor(sf::Color::Red);
+//		circle.setOutlineThickness(5);
+//		sf::Vector2i mousePos = sf::Mouse::getPosition(App);
+//		circle.setPosition(mousePos.x-radius/2, mousePos.y-radius/2);
 
 		//App.draw( circle );
 
 		//App.draw( scene );
 
-		BoxWithText box( 300 ,50, 300, 100);
-		box.name = "box";
-		box.words.sf.setString( "Hallo" );
+//		BoxWithText box( 300 ,50, 300, 100);
+//		box.name = "box";
+//		box.words.sf.setString( "Hallo" );
 
-		App.draw( box );
+//		App.draw( box );
 
-		vid.update();
-		App.draw( vid );
+//		vid.update();
+//		App.draw( vid );
 
-		timeline.update_cursor( vid.location );
+//		timeline.update_cursor( vid.location );
 
-		App.draw( timeline );
+//		App.draw( timeline );
 		//TODO: make "Interface" class to encapsulate main drawing / UI logic
+
+		annotator.update( );
+
+		App.draw( annotator.canvas );
 
         // draw app
 		App.display();
