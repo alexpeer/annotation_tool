@@ -16,21 +16,26 @@ int main()
 	int viewHeight = 800;
  
     // Create the main window
-    sf::RenderWindow App(sf::VideoMode(viewWidth, viewHeight, 32), "Cube Brain");
+    sf::RenderWindow App(sf::VideoMode(viewWidth, viewHeight, 32), "Annotation Tool");
 	
    // Create a clock for measuring time elapsed
     sf::Clock Clock;	
 	Clock.restart();
 	
+	Timeline timeline;
+
 	Video vid;
 	//vid.openFile( "bubbles.avi" );
 	//vid.openFile( "test-bubbles.avi" );
 	vid.openFile( "test-eye_tracker.avi ");
 	//vid.openFile( "sample_for_annotator_00000.avi" );
-	// mencoder in.avi -ovc raw -vf format=i420 -o out.avi 
 	//vid.openFile( "" );
 	vid.play();
-	// mencoder sample.avi -ovc raw -vf format=i420 -oac copy -o out.avi
+	// may need to prep video by decoding with mencoder first, command line looks like:  
+	//    mencoder sample.avi -ovc raw -vf format=i420 -oac copy -o out.avi
+
+	//TODO: add stream to timeline instead, handle this internally
+	timeline.set_endTime( vid.duration );
 
     // Start draw loop
 	while (App.isOpen())
@@ -95,7 +100,8 @@ int main()
 		vid.update();
 		App.draw( vid );
 
-		Timeline timeline;
+		timeline.update_cursor( vid.location );
+
 		App.draw( timeline );
 		//TODO: make "Interface" class to encapsulate main drawing / UI logic
 

@@ -14,7 +14,7 @@ public:
 		this->name = name;
 		this->words.sf.setString( name );
 
-		this->rect.sf.setSize( sf::Vector2f( 400, 30 ) );
+		this->background.sf.setSize( sf::Vector2f( 400, 30 ) );
 	}
 };
 
@@ -22,9 +22,6 @@ public:
 class Timeline_Tickmarks : public DrawList
 {
 public:
-	Text startTime;
-	Text endTime;
-
 
 	Timeline_Tickmarks()
 	{
@@ -36,12 +33,21 @@ public:
 
 		background.sf.setFillColor( sf::Color( 80, 80, 80 ) );
 
+		cursor.sf.setFillColor( sf::Color( 190, 232, 224 ) );
+		cursorTime.words.sf.setCharacterSize( 11 );
+		cursorTime.words.sf.setColor( sf::Color( 0, 0, 0 ) );
+		cursorTime.background.sf.setFillColor( sf::Color( 190, 232, 224 ) );
+
+		update_cursor( 0 );
+
 		add(background);
+		add(cursor);
+		add(cursorTime);
 		add(startTime);
 		add(endTime);
 
-		resize( 700 );
 		height = 50;
+		resize( 700 );
 		
 		
 	}
@@ -57,14 +63,64 @@ public:
 
 		background.sf.setSize( sf::Vector2f( width, height ) );
 		
+		cursor.sf.setSize( sf::Vector2f( 1, height+2 ) );
+	}
+
+
+	void update_cursor( double milliseconds )
+	{
+		position = milliseconds / endTime_millis;
+
+		float move_to_x = width * position;
+
+		cursor.sf.setPosition( width * position, 0 );
+
+		setWordsToMillis( milliseconds, cursorTime.words );
+
+		//TODO: move this into class
+		cursorTime.sizeBoxToText();
+		cursorTime.setPosition(	move_to_x - (cursorTime.width / 2),
+								cursor.getPosition().y + cursor.sf.getLocalBounds().height
+							  );
+	}
+
+	void set_endTime( double milliseconds )
+	{
+		endTime_millis = milliseconds;
+		setWordsToMillis( milliseconds, endTime );
+	}
+
+	void setWordsToMillis( const double &millis, Text &words )
+	{
+		char buffer[9];
+
+		int seconds = millis / 1000;
+		int minutes = seconds / 60;
+		seconds = seconds % 60;
+		int hours = minutes / 60;
+		minutes = minutes % 60;
+		
+		sprintf( buffer, "%02d:%02d:%02d", hours, minutes, seconds );
+		
+		words.sf.setString( buffer );
+
 	}
 
 	float width, height;
-	
+
 private:
 	RectangleShape background;
-};
 
+	Text startTime;
+	Text endTime;
+
+	double endTime_millis;
+
+	double position;
+
+	RectangleShape cursor;
+	BoxWithText cursorTime;
+};
 
 // the timeline is the entire area that shows streams and stream nav; it is made of several other bits
 class Timeline : public Drawable
@@ -95,6 +151,16 @@ public:
 		tickmarks.resize( w );
 
 		//TODO: resize all components
+	}
+
+	void update_cursor( double milliseconds )
+	{
+		tickmarks.update_cursor( milliseconds );
+	}
+	
+	void set_endTime( double milliseconds )
+	{
+		tickmarks.set_endTime( milliseconds );
 	}
 
 private:

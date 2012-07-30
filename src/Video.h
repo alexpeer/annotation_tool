@@ -29,6 +29,8 @@ public:
 	//bool isPaused = false;
 	double location;
 
+	double duration;
+
 	bool isLoaded;
 
 	float framerate_per_second;
@@ -66,7 +68,11 @@ public:
 		//capture = cvCreateFileCapture( filename );
 		capture.open( filename );
 		//TODO: check for errors on file open
-		setFramerate( 30 ); //TODO: should pull this from file
+
+		int fps = capture.get( CV_CAP_PROP_FPS );
+		setFramerate( fps ); //TODO: should pull this from file
+
+		duration = capture.get( CV_CAP_PROP_FRAME_COUNT ) * fps;
 		
 		bool result = capture.read( frame );//cvQueryFrame( capture );
 		if( result == false )
@@ -174,6 +180,7 @@ public:
 		getNextFrame();
 		syncLocation();
 		playTimer.restart();
+		millis_since_last_frame = 0;
 		return location;
 	}
 
@@ -184,6 +191,7 @@ public:
 		getNextFrame();
 		syncLocation();
 		playTimer.restart();
+		millis_since_last_frame = 0;
 		return location;
 	}
 
@@ -193,27 +201,91 @@ public:
 			return;
 
 		sf::Time elapsed = playTimer.getElapsedTime();
-		float millis_elapsed = elapsed.asMilliseconds();
 
-		if( millis_elapsed < millis_per_frame )
+		millis_since_last_frame = elapsed.asMilliseconds();
+
+		total_elapsed_playtime += elapsed.asMilliseconds();
+
+		if( millis_since_last_frame < millis_per_frame )
 			return;
-
 		playTimer.restart();
+
+		float curr_pos = location;
+
 		int result;
-		while( millis_elapsed >= millis_per_frame )
+		while( millis_since_last_frame >= millis_per_frame )
 		{
-			//result = cvGrabFrame(capture); // should just advance frame
 			result = capture.grab(); // should just advance frame
-			if( result = 0 ) // retrieve error; probably end of stream?
+			if( result == false ) // retrieve error; probably end of stream?
+			{	
+				stop();
 				break;
-			millis_elapsed -= millis_per_frame;
+			}
+			millis_since_last_frame -= millis_per_frame;
 		}
 
-		//frame = cvRetrieveFrame( capture );
-		result = capture.retrieve( frame );
-		syncFrameToTexture();
-		syncLocation();
+/*		while( curr_pos < total_elapsed_playtime )
+		{
+			result = capture.grab(); // should just advance frame
+			if( result == false ) // retrieve error; probably end of stream?
+			{	
+				stop();
+				break;
+			}
+			curr_pos += millis_per_frame;
+			//syncLocation();
+		}
+*/
+		
+
+/*		if( curr_pos + millis_per_frame >= total_elapsed_playtime )
+		{
+			result = capture.grab();
+			if(result == false)
+			{
+				stop();
+			}
+			else
+			{
+				curr_pos + millis_per_frame;
+				syncLocation();
+			}
+		}
+		else
+		{
+			capture.set( CV_CAP_PROP_POS_MSEC, total_elapsed_playtime );
+			result = capture.grab();
+			if(result == false)
+			{	stop();		}
+			else
+			{	curr_pos = location;
+				syncLocation();
+			}
+		}
+*/
+
+
+		if( isPlaying )
+		{
+			//frame = cvRetrieveFrame( capture );
+			result = capture.retrieve( frame );
+			syncFrameToTexture();
+			syncLocation();
+
+			//DEBUG//
+		
+				printf( "\ncurr_pos: %f\n", curr_pos );
+				printf( "location: %f\n", location );
+				printf( "elapsed : %f\n", total_elapsed_playtime );
+				printf( "diff    : %f\n", curr_pos - location );
+				printf( "dur: %f\n", duration );
+
+			//DEBUG//
+		}
 	}
+
+	float millis_since_last_frame;
+	float total_elapsed_playtime;
 
 	void play()
 	{
@@ -222,6 +294,8 @@ public:
 		//isSeeking = false;
 
 		playTimer.restart();
+		millis_since_last_frame = 0;
+		total_elapsed_playtime = 0;
 	}
 
 	void stop()

@@ -19,18 +19,36 @@ public:
 		this->setPosition( x, y );
 
 		
-		rect.sf.setSize( sf::Vector2f(width, height) );
-		rect.sf.setPosition(0,0);
+		background.sf.setSize( sf::Vector2f(width, height) );
+		background.sf.setPosition(0,0);
 		words.sf.setString( text );
 		words.sf.setColor( sf::Color( 255, 0, 0 ) );
 
-		add( &rect );
+		add( &background );
 		add( &words );
 
 	}
 
-	RectangleShape rect;
+	void sizeBoxToText()
+	//TODO: do this autmatically on text change, resize
+	{		
+
+		float padding = 8;
+
+		sf::FloatRect bounds = words.sf.getLocalBounds();
+		background.sf.setSize( sf::Vector2f( bounds.width + padding, bounds.height + padding ) );
+
+		width = bounds.width + padding;
+		height = bounds.height + padding;
+
+		words.setPosition( padding / 2, padding / 2 );
+
+	}
+
+	RectangleShape background;
 	Text words;
+
+	float width, height;
 
 private:
 /*

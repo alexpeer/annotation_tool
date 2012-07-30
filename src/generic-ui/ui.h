@@ -2,6 +2,6 @@
 #define GENERICUI_IS_NO_SNOWFLAKE
 
 #include "Drawable.h"
-#include "BowWithText.h"
+#include "BoxWithText.h"
 
 #endif

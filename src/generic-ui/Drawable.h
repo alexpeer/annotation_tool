@@ -134,7 +134,7 @@ private:
 	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
 };
 
-class Text :	public Drawable
+class Text : public Drawable
 {
 public:
 	sf::Text sf;
