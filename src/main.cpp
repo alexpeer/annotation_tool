@@ -6,6 +6,7 @@
 #include "generic-ui/ui.h"
 #include "Timeline.h"
 #include "Video.h"
+#include "Stream.h"
 
 #include <cstdio>  // For ddebug / stdout
 
@@ -33,6 +34,8 @@ int main()
 	vid.play();
 	// may need to prep video by decoding with mencoder first, command line looks like:  
 	//    mencoder sample.avi -ovc raw -vf format=i420 -oac copy -o out.avi
+
+	// Gorillaz-Stylo-Alex-Metric-Remix.mp3
 
 	//TODO: add stream to timeline instead, handle this internally
 	timeline.set_endTime( vid.duration );

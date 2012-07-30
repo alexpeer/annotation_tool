@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClInclude Include="src\generic-ui\BoxWithText.h" />
     <ClInclude Include="src\generic-ui\Drawable.h" />
+    <ClInclude Include="src\generic-ui\ui.h" />
     <ClInclude Include="src\Timeline.h" />
     <ClInclude Include="src\Video.h" />
   </ItemGroup>
