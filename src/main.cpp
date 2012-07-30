@@ -48,6 +48,9 @@ int main()
 	*/
 
 	annotator.addVideoStream( "test-eye_tracker.avi" );
+	//annotator.addAudioStream( "Gorillaz-Stylo-Alex-Metric-Remix.mp3" );
+	//annotator.addAudioStream( "test-eye_tracker.avi" );
+	annotator.addAudioStream( "Gorillaz-Stylo-Alex-Metric-Remix.wav" );
 	
 	annotator.play();
 

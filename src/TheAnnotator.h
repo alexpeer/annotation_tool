@@ -22,7 +22,10 @@ public:
 		VideoStream *video = new VideoStream();
 		bool didWork = video->open( filename );
 		if( ! didWork )
+		{
+			printf( "ERROR: Couldn't load video file: %s\n", filename );
 			return false;
+		}
 		
 		video_area.add( video->video );
 
@@ -36,7 +39,10 @@ public:
 		AudioStream *audio = new AudioStream();
 		bool didWork = audio->open( filename );
 		if( ! didWork )
+		{
+			printf( "ERROR: couldn't load audio file: %s\n", filename );
 			return false;
+		}
 		
 		streams.push_back( audio );
 		updateLongestDuration( audio->getDuration() );
