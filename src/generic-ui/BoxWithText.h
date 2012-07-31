@@ -65,7 +65,9 @@ private:
 
 	}
 */
-
+	
+	bool isPointInside( float x, float y )
+	{	return background.sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
 };
 
 #endif

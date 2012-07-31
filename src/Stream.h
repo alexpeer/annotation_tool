@@ -3,6 +3,7 @@
 
 #include "Video.h"
 #include <SFML/Audio.hpp>
+#include <string>
 
 class Stream
 {
@@ -28,8 +29,9 @@ public:
 
 	StreamType type;
 
-private:
+	std::string name;
 
+private:
 
 };
 
@@ -59,6 +61,7 @@ public:
 
 	bool open( char* filename )
 	{
+		name = filename;
 		return video.openFile( filename );
 	}
 
@@ -93,6 +96,7 @@ public:
 	
 	bool open( char* filename )
 	{
+		name = filename;
 		return audio.openFromFile( filename );
 	}
 

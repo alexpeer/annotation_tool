@@ -134,3 +134,57 @@
 		}
 
 	}
+
+	bool DrawList::isPointInside( float x, float y )
+	{
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			if( ((Drawable*)cursor)->isPointInside( x, y ) )
+				return true;
+		}
+		return false;
+	}
+
+	bool DrawList::mouseMove( float x, float y )
+	{
+		bool result = false;
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			if( ((Drawable*)cursor)->mouseMove( x, y ) )
+				result = true;
+		}
+		return result;
+	}
+	bool DrawList::mouseClick( float x, float y, sf::Mouse::Button which )
+	{
+		bool result = false;
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			if( ((Drawable*)cursor)->mouseClick( x, y, which ) )
+				result = true;
+		}
+		return result;
+	}
+
+	bool DrawList::mouseDrag( float x, float y, sf::Mouse::Button which )
+	{
+		bool result = false;
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			if( ((Drawable*)cursor)->mouseDrag( x, y, which ) )
+				result = true;
+		}
+		return result;
+	}

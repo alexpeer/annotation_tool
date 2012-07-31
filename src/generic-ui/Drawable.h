@@ -61,51 +61,25 @@ public:
 		visible = true;
 		name = "";
 	}
+
+	virtual bool isPointInside( float x, float y )  { return false; }
+	virtual bool mouseMove( float x, float y )  { return false; }
+	virtual bool mouseClick( float x, float y, sf::Mouse::Button which )  { return false; }
+	virtual bool mouseDrag( float x, float y, sf::Mouse::Button which )  {	return false; }
 };
 
-/*
-class Drawable_wrapper : public Drawable
-{
-public:
-	Drawable_wrapper( sf::Drawable * delicious )
-	{
-		nugat = delicious;
-	}
-	
-	Drawable_wrapper( )
-	{
-		nugat = NULL;
-	}
-
-	void wrap( sf::Drawable * delicious )
-	{
-		nugat = delicious;
-	}
-
-private:
-	sf::Drawable * nugat;
-
-	
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		target.draw( *nugat, states );
-	}
-};
-*/
 
 class DrawList : public Drawable, public LinkList
 {
 
 public:
 
-//	void add( sf::Drawable *thing )
-//	{
-//		Drawable_wrapper_dynamic * wrap = new Drawable_wrapper( thing );
-//		//TODO: maintain list of dynamically allocated wrappers to be reaped on remove
-//		LinkList::add( &wrap );
-//	}
-
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	bool isPointInside( float x, float y );
+	bool mouseMove( float x, float y );
+	bool mouseClick( float x, float y, sf::Mouse::Button which );
+	bool mouseDrag( float x, float y, sf::Mouse::Button which );
 };
 
 
@@ -116,9 +90,13 @@ class Sprite :	public Drawable
 public:
 	sf::Sprite sf;
 
+	bool isPointInside( float x, float y )
+	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
+
 };
 
 class RectangleShape :	public Drawable
@@ -129,9 +107,13 @@ public:
 //	void setSize(const sf::Vector2f &size)
 //	{	sf.setSize( size );	}
 
+	bool isPointInside( float x, float y )
+	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
+
 };
 
 class Text : public Drawable
@@ -142,9 +124,13 @@ public:
 //	void setString( const String &string )
 //	{	sf.setString( string );	}
 
+	bool isPointInside( float x, float y )
+	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
+	
 };
 
 #endif

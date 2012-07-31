@@ -77,12 +77,16 @@ public:
 
 	void seek( double milliseconds )
 	{
+		std::list<Stream*>::iterator it;
+		for( it = streams.begin(); it != streams.end(); ++it )
+		{	(*it)->seek( milliseconds );	}
 
 	}
 
-	void seek_percentage( double milliseconds )
+	void seek_percentage( double zero_to_one )
 	{
-
+		double seek_to_milliseconds = timeline.get_endTime() * zero_to_one;
+		seek( seek_to_milliseconds );
 	}
 	
 // update stuff
@@ -100,7 +104,7 @@ public:
 			(*it)->update( elapsed );
 		}
 
-		timeline.update_cursor( (*(streams.begin()))->getCurrentPosition() );
+		timeline.update( elapsed );//_cursor( (*(streams.begin()))->getCurrentPosition() );
 	}
 
 // draw stuff
@@ -125,6 +129,7 @@ public:
 
 	TheAnnotator()
 	{
+		timeline.annotator = this;
 		init_draw();
 	}
 
