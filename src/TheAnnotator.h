@@ -105,7 +105,18 @@ public:
 		}
 
 		timeline.update( elapsed );//_cursor( (*(streams.begin()))->getCurrentPosition() );
+
 	}
+
+// mouse stuff
+	
+	void onMouseMove( float x, float y )
+	{	canvas.onMouseMove( x, y );	}
+	void onMouseClick( float x, float y, sf::Mouse::Button which )
+	{	canvas.onMouseClick( x, y, which );	}
+	void onMouseDrag( float x, float y, sf::Mouse::Button which )
+	{	canvas.onMouseDrag( x, y, which );	}
+
 
 // draw stuff
 	DrawList canvas;

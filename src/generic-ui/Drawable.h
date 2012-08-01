@@ -54,7 +54,7 @@ class Drawable :	public LinkListable,
 friend class DrawList;
 public:
 	bool visible;
-	sf::String name;
+	std::string name;
 
 	Drawable()
 	{
@@ -63,9 +63,12 @@ public:
 	}
 
 	virtual bool isPointInside( float x, float y )  { return false; }
-	virtual bool mouseMove( float x, float y )  { return false; }
-	virtual bool mouseClick( float x, float y, sf::Mouse::Button which )  { return false; }
-	virtual bool mouseDrag( float x, float y, sf::Mouse::Button which )  {	return false; }
+	virtual bool onMouseMove( float x, float y )  { return false; }
+	virtual bool onMouseClick( float x, float y, sf::Mouse::Button which )  { return false; }
+	virtual bool onMouseDrag( float x, float y, sf::Mouse::Button which )  {	return false; }
+
+//private:
+	sf::Vector2f getParentPosition();
 };
 
 
@@ -74,12 +77,21 @@ class DrawList : public Drawable, public LinkList
 
 public:
 
+	DrawList()
+	{
+		name = "Drawlist";
+		visible = true;
+		areChildrenMousable = true;	
+	}
+
+	bool areChildrenMousable;
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	bool isPointInside( float x, float y );
-	bool mouseMove( float x, float y );
-	bool mouseClick( float x, float y, sf::Mouse::Button which );
-	bool mouseDrag( float x, float y, sf::Mouse::Button which );
+	bool onMouseMove( float x, float y );
+	bool onMouseClick( float x, float y, sf::Mouse::Button which );
+	bool onMouseDrag( float x, float y, sf::Mouse::Button which );
 };
 
 
@@ -108,7 +120,11 @@ public:
 //	{	sf.setSize( size );	}
 
 	bool isPointInside( float x, float y )
-	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+	{	
+		sf::Vector2f parentPos = this->getParentPosition();
+		sf::FloatRect bounds = sf.getGlobalBounds();
+
+		return bounds.contains( sf::Vector2f( x - parentPos.x, y - parentPos.y ) );	}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const

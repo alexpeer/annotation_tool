@@ -44,10 +44,16 @@ public:
 	void stop()	{	video.stop();	}
 	void seek( double milliseconds )
 	{
+		if( milliseconds > video.duration )
+		{
+			video.stop();
+			return;
+		}
+
 		double result_millis = video.seek_millis( milliseconds );
 		if( result_millis != milliseconds )
 		{
-			printf( "WARNING: stream seek: result not exact, off by: %d", result_millis - milliseconds );
+			printf( "WARNING: video stream seek: %s\n\tresult not exact, off by: %f", video.name.c_str(), result_millis - milliseconds );
 		}
 	}
 
@@ -78,6 +84,11 @@ public:
 	void stop()	{	audio.pause();	}
 	void seek( double milliseconds )
 	{
+		if( milliseconds > audio.getDuration().asMilliseconds() )
+		{	audio.stop();
+			return;
+		}
+
 		sf::SoundSource::Status status = audio.getStatus();
 		//have to be paused or playing before we can seek
 		if( status == sf::SoundSource::Status::Stopped )

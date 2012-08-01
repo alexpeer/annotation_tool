@@ -5,7 +5,7 @@
 	LinkListable::LinkListable()
 	{
 		owner = NULL;
-		//parent = NULL;
+
 		prev = NULL;
 		next = NULL;
 	}
@@ -20,15 +20,15 @@
 		//notify Reaper of orphan?
 
 		if( owner->head == this )
-			owner->head == NULL;
+			owner->head = NULL;
 		if( owner->tail == this )
-			owner->tail == NULL;
+			owner->tail = NULL;
 		owner->size--;
 
 		this->owner = NULL;
 	}
 
-	void LinkListable::append( LinkListable *thing )
+/*	void LinkListable::append( LinkListable *thing )
 	{	
 		thing->remove();
 		
@@ -57,6 +57,7 @@
 
 		thing->owner = owner;
 	}
+*/
 
 //:::::::::: LinkList
 
@@ -114,6 +115,27 @@
 
 	LinkListable* LinkList::getHead() const		{	return head;	}
 
+//:::::::: Drawable
+
+	
+	sf::Vector2f Drawable::getParentPosition()
+	{
+
+		DrawList* parent = (DrawList*) owner;
+
+		sf::Vector2f parentPos;
+		parentPos.x = 0;
+		parentPos.y = 0;
+		if(parent != NULL)
+			parentPos = parent->getParentPosition();
+
+		//printf( "GETPARENTPOS: %s\n", this->name.c_str() ); //DEBUG//
+		sf::Vector2f thisPos = this->getPosition();
+		parentPos += thisPos;
+
+		return parentPos;
+	}
+
 //:::::::: DrawList		
 
 	void DrawList::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -148,42 +170,51 @@
 		return false;
 	}
 
-	bool DrawList::mouseMove( float x, float y )
-	{
+	bool DrawList::onMouseMove( float x, float y )
+	{		
+		if( areChildrenMousable == false )
+			return false;
+
 		bool result = false;
 		for( const LinkListable *cursor = (LinkListable*)getHead(); 
 			 cursor != NULL;
 			 cursor = cursor->next
 		   )
 		{
-			if( ((Drawable*)cursor)->mouseMove( x, y ) )
+			if( ((Drawable*)cursor)->onMouseMove( x, y ) )
 				result = true;
 		}
 		return result;
 	}
-	bool DrawList::mouseClick( float x, float y, sf::Mouse::Button which )
+	bool DrawList::onMouseClick( float x, float y, sf::Mouse::Button which )
 	{
+		if( areChildrenMousable == false )
+			return false;
+
 		bool result = false;
 		for( const LinkListable *cursor = (LinkListable*)getHead(); 
 			 cursor != NULL;
 			 cursor = cursor->next
 		   )
 		{
-			if( ((Drawable*)cursor)->mouseClick( x, y, which ) )
+			if( ((Drawable*)cursor)->onMouseClick( x, y, which ) )
 				result = true;
 		}
 		return result;
 	}
 
-	bool DrawList::mouseDrag( float x, float y, sf::Mouse::Button which )
+	bool DrawList::onMouseDrag( float x, float y, sf::Mouse::Button which )
 	{
+		if( areChildrenMousable == false )
+			return false;
+
 		bool result = false;
 		for( const LinkListable *cursor = (LinkListable*)getHead(); 
 			 cursor != NULL;
 			 cursor = cursor->next
 		   )
 		{
-			if( ((Drawable*)cursor)->mouseDrag( x, y, which ) )
+			if( ((Drawable*)cursor)->onMouseDrag( x, y, which ) )
 				result = true;
 		}
 		return result;

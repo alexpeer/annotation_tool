@@ -77,6 +77,30 @@ int main()
             // Resize event : adjust viewport
             if (Event.type == sf::Event::Resized)
                 glViewport(0, 0, Event.size.width, Event.size.height);
+
+
+			// mouse events
+			if( Event.type == sf::Event::MouseButtonReleased )
+			{
+				printf( "\nSFML Event: Mouse Release: %d, %d, %d\n", 
+							Event.mouseButton.x, 
+							Event.mouseButton.y,
+							Event.mouseButton.button
+					  );
+				annotator.onMouseClick(	Event.mouseButton.x, 
+										Event.mouseButton.y,
+										Event.mouseButton.button
+									);
+			}
+
+			if( Event.type == sf::Event::MouseMoved )
+			{
+				//TODO: maintain bool to check if left was down, for drag
+				annotator.onMouseMove(	Event.mouseMove.x, 
+										Event.mouseMove.y
+									  );
+			}
+
         }
 
 		
@@ -121,6 +145,9 @@ int main()
 
 //		App.draw( timeline );
 		//TODO: make "Interface" class to encapsulate main drawing / UI logic
+		
+		//do mouse stuff
+
 
 		annotator.update( );
 

@@ -26,6 +26,8 @@ public:
 
 	Timeline_Tickmarks()
 	{
+		areChildrenMousable = false;
+
 		startTime.sf.setString("00:00:00");
 		endTime.sf.setString("60:00:00");
 
@@ -52,6 +54,9 @@ public:
 		position_millis = 0;
 		position_percent = 0;
 		update( 0 );
+
+		background.name = "Tickmarks background";
+		name = "Timeline tickmarks";
 	}
 
 	void resize( float w )
@@ -66,6 +71,7 @@ public:
 		background.sf.setSize( sf::Vector2f( width, height ) );
 		
 		cursor.sf.setSize( sf::Vector2f( 1, height+2 ) );
+
 	}
 
 
@@ -117,7 +123,7 @@ public:
 
 	float width, height;
 
-private:
+//private:
 	RectangleShape background;
 
 	Text startTime;
@@ -133,7 +139,7 @@ private:
 };
 
 // the timeline is the entire area that shows streams and stream nav; it is made of several other bits
-class Timeline : public Drawable
+class Timeline : public DrawList
 {
 public:
 friend TheAnnotator;
@@ -180,27 +186,25 @@ private:
 
 	TheAnnotator * annotator;
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		states.transform.combine( this->getTransform() );
-		target.draw( contents, states );
-		
-
-	}
+	//void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	//{
+	//	states.transform.combine( this->getTransform() );
+	//	target.draw( contents, states );
+	//}
 
 	bool isPointInside( float x, float y )
 	{
 		return background.isPointInside( x, y );
 	}
 
-	bool mouseMove( float x, float y )
+	bool onMouseMove( float x, float y )
 	{
 		return true;
 	}
 
-	bool mouseClick( float x, float y, sf::Mouse::Button which );
+	bool onMouseClick( float x, float y, sf::Mouse::Button which );
 
-	bool mouseDrag( float x, float y, sf::Mouse::Button which )
+	bool onMouseDrag( float x, float y, sf::Mouse::Button which )
 	{
 		return true;
 	}

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\generic-ui\Drawable.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Timeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\generic-ui\BoxWithText.h" />
@@ -64,7 +65,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openGL32.lib;glu32.lib;sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;opencv_core240d.lib;opencv_video240d.lib;opencv_videostab240d.lib;opencv_highgui240d.lib;libtiffd.lib;libpngd.lib;libjpegd.lib;zlibd.lib;libjasperd.lib;Vfw32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>openGL32.lib;glu32.lib;sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;opencv_core240d.lib;opencv_video240d.lib;opencv_videostab240d.lib;opencv_highgui240d.lib;libtiffd.lib;libpngd.lib;libjpegd.lib;zlibd.lib;libjasperd.lib;Vfw32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>

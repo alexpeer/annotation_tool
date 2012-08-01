@@ -191,7 +191,7 @@ public:
 		getNextFrame();
 		syncLocation();
 		playTimer.restart();
-		millis_since_last_frame = 0;
+		millis_since_last_frame = millis - location;
 		return location;
 	}
 
@@ -275,11 +275,11 @@ public:
 
 			//DEBUG//
 		
-				printf( "\ncurr_pos: %f\n", curr_pos );
-				printf( "location: %f\n", location );
-				printf( "elapsed : %f\n", total_elapsed_playtime );
-				printf( "diff    : %f\n", curr_pos - location );
-				printf( "dur: %f\n", duration );
+			//	printf( "\ncurr_pos: %f\n", curr_pos );
+			//	printf( "location: %f\n", location );
+			//	printf( "elapsed : %f\n", total_elapsed_playtime );
+			//	printf( "diff    : %f\n", curr_pos - location );
+			//	printf( "dur: %f\n", duration );
 
 			//DEBUG//
 		}
