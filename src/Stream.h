@@ -116,39 +116,6 @@ private:
 
 };
 
-class TextStream : public Stream
-{
-public:
-	TextStream()	{	type = TEXT;	}
 
-	virtual void play()
-	{
-		;
-	}
-	virtual void stop()
-	{
-		;
-	}
-
-	virtual void seek( double milliseconds )
-	{
-		;
-	}
-	virtual void update( double elapsed_milliseconds )
-	{
-		;
-	}
-
-	// all times should be in milliseconds
-	virtual double getDuration()
-	{
-		;
-	}
-	virtual double getCurrentPosition()
-	{
-		;
-	}
-
-};
 
 #endif

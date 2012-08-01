@@ -4,8 +4,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "generic-ui\ui.h"
+
 #include "Stream.h"
+#include "TextStream.h"
+
+#include "TextArea.h"
 #include "Timeline.h"
+
 #include "Video.h"
 
 #include <list>

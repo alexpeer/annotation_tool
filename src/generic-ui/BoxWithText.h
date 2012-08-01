@@ -45,6 +45,11 @@ public:
 
 	}
 
+	float getHeight()
+	{
+		return height;
+	}
+
 	RectangleShape background;
 	Text words;
 

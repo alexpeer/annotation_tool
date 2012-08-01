@@ -67,6 +67,8 @@ public:
 	virtual bool onMouseClick( float x, float y, sf::Mouse::Button which )  { return false; }
 	virtual bool onMouseDrag( float x, float y, sf::Mouse::Button which )  {	return false; }
 
+	virtual float getHeight() = 0;
+
 //private:
 	sf::Vector2f getParentPosition();
 };
@@ -92,6 +94,8 @@ public:
 	bool onMouseMove( float x, float y );
 	bool onMouseClick( float x, float y, sf::Mouse::Button which );
 	bool onMouseDrag( float x, float y, sf::Mouse::Button which );
+
+	float getHeight();
 };
 
 
@@ -104,6 +108,11 @@ public:
 
 	bool isPointInside( float x, float y )
 	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+	
+	float getHeight()
+	{
+		return sf.getLocalBounds().height;
+	}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -124,7 +133,13 @@ public:
 		sf::Vector2f parentPos = this->getParentPosition();
 		sf::FloatRect bounds = sf.getGlobalBounds();
 
-		return bounds.contains( sf::Vector2f( x - parentPos.x, y - parentPos.y ) );	}
+		return bounds.contains( sf::Vector2f( x - parentPos.x, y - parentPos.y ) );	
+	}
+
+	float getHeight()
+	{
+		return sf.getLocalBounds().height;
+	}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -142,6 +157,11 @@ public:
 
 	bool isPointInside( float x, float y )
 	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+	
+	float getHeight()
+	{
+		return sf.getLocalBounds().height;
+	}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const

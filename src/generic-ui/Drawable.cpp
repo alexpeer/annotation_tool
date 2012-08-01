@@ -157,6 +157,30 @@
 
 	}
 
+	float DrawList::getHeight( )
+	{
+
+		 LinkListable *cursor = (LinkListable*)getHead();
+		 Drawable *drawable = (Drawable*)cursor;
+
+		float biggest = 0;
+		float thisHeight = 0;
+
+		while( cursor != NULL )
+		{
+			drawable = (Drawable*)cursor;
+
+			thisHeight = drawable->getHeight();
+			if(thisHeight > biggest )
+				biggest = thisHeight;
+
+			cursor = cursor->next;
+		}
+
+		return biggest;
+
+	}
+
 	bool DrawList::isPointInside( float x, float y )
 	{
 		for( const LinkListable *cursor = (LinkListable*)getHead(); 
