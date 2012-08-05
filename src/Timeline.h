@@ -19,6 +19,8 @@ public:
 	}
 };
 
+class Timeline;
+
 // the tickmarks area is where current / max time will be denoted; most stream nav actions will happen here
 class Timeline_Tickmarks : public DrawList
 {
@@ -57,6 +59,8 @@ public:
 
 		background.name = "Tickmarks background";
 		name = "Timeline tickmarks";
+
+		areChildrenMousable = false;
 	}
 
 	void resize( float w )
@@ -121,6 +125,13 @@ public:
 
 	}
 
+	void onMouseClick( MouseEvent &e );
+
+	sf::FloatRect getClickBounds()
+	{
+		return background.getClickBounds();
+	}
+
 	float width, height;
 
 //private:
@@ -136,6 +147,8 @@ public:
 
 	RectangleShape cursor;
 	BoxWithText cursorTime;
+
+	Timeline * timeline;
 };
 
 // the timeline is the entire area that shows streams and stream nav; it is made of several other bits
@@ -143,6 +156,7 @@ class Timeline : public DrawList
 {
 public:
 friend TheAnnotator;
+friend Timeline_Tickmarks;
 
 	Timeline();
 
@@ -153,11 +167,14 @@ friend TheAnnotator;
 		
 		background.sf.setSize( sf::Vector2f( width, height ) );
 
+		tickmarks.timeline = this;
 		tickmarks.height = 50;
 		tickmarks.setPosition( 0, height - tickmarks.height );
 		tickmarks.resize( w );
 
 		//TODO: resize all components
+
+		name = "Timeline";
 	}
 
 	void update( double elapsed )
@@ -175,6 +192,16 @@ friend TheAnnotator;
 		return tickmarks.get_endTime();
 	}
 
+	void onMouseDrag( MouseEvent &e )
+	{
+		return;
+	}
+
+	sf::FloatRect getClickBounds()
+	{
+		return background.getClickBounds();
+	}
+
 private:
 	RectangleShape background;
 	Timeline_Tickmarks tickmarks;
@@ -185,29 +212,6 @@ private:
 	float width, height;
 
 	TheAnnotator * annotator;
-
-	//void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	//{
-	//	states.transform.combine( this->getTransform() );
-	//	target.draw( contents, states );
-	//}
-
-	bool isPointInside( float x, float y )
-	{
-		return background.isPointInside( x, y );
-	}
-
-	bool onMouseMove( float x, float y )
-	{
-		return true;
-	}
-
-	bool onMouseClick( float x, float y, sf::Mouse::Button which );
-
-	bool onMouseDrag( float x, float y, sf::Mouse::Button which )
-	{
-		return true;
-	}
 };
 
 

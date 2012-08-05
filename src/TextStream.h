@@ -14,12 +14,25 @@ public:
 	double start;
 	double stop;
 
+	TextEvent( double start = 0, double stop = 0, char* text = "" )
+	{
+		this->start = start;
+		this->stop = stop;
+		words = text;
+	}
+
 	bool isActiveAtTime( double milliseconds )
 	{
 		if( milliseconds >= start && milliseconds <= stop )
 			return true;
 		return false;
 	}
+
+	bool operator<( TextEvent &rightArg )
+	{
+		return (this->stop < rightArg.start);
+	}
+
 };
 
 class TextStream : public Stream
@@ -35,13 +48,12 @@ public:
 
 	double cur_pos_milliseconds;
 
-	bool isActive; // do we have an even to display at the current play time
+	bool isActive; // do we have an event to display at the current play time
 
 	TextStream()
 	{
 		type = TEXT;
 		isPlaying = false;
-		curr_pos = NULL;
 		cur_pos_milliseconds = 0;
 		isActive = false;
 	}
@@ -60,9 +72,6 @@ public:
 	{
 		if( events.size() == 0 )
 			return;
-
-		if(curr_pos == NULL)
-			curr_pos = events.begin();
 		
 		std::list<TextEvent>::iterator next, prev;
 		//float lastTime;
@@ -112,7 +121,7 @@ public:
 	
 	void update( double elapsed_milliseconds )
 	{
-		cur_pos_milliseconds += milliseconds;
+		cur_pos_milliseconds += elapsed_milliseconds;
 
 		seek( cur_pos_milliseconds );
 	}
@@ -130,7 +139,23 @@ public:
 		return cur_pos_milliseconds;
 	}
 
+	void addEvent( double start, double stop, char* text )
+	{
+		//TODO: update iterator?
 
+		events.push_back( TextEvent( start, stop, text ) );
+
+		//TODO: add in order, instead of sort
+		events.sort();
+
+		iteratorInit();
+		seek( cur_pos_milliseconds );
+	}
+
+	void iteratorInit()
+	{
+		curr_pos = events.begin();
+	}
 
 };
 

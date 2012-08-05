@@ -52,7 +52,7 @@ int main()
 	//annotator.addAudioStream( "test-eye_tracker.avi" );
 	annotator.addAudioStream( "Gorillaz-Stylo-Alex-Metric-Remix.wav" );
 	
-	annotator.play();
+	//annotator.play();
 
     // Start draw loop
 	while (App.isOpen())
@@ -80,25 +80,39 @@ int main()
 
 
 			// mouse events
+// mouse events
+			if( Event.type == sf::Event::MouseButtonPressed )
+			{
+				printf( "sf::Event mouseDown\n" );
+				//do mouseDown
+				MouseEvent e(	sf::Vector2f( Event.mouseButton.x, Event.mouseButton.y ),
+								Event.mouseButton.button,
+								annotator.canvas.getTransform()
+							);
+				annotator.canvas.internal_onMouseDown( e );
+
+			}
 			if( Event.type == sf::Event::MouseButtonReleased )
 			{
-				printf( "\nSFML Event: Mouse Release: %d, %d, %d\n", 
-							Event.mouseButton.x, 
-							Event.mouseButton.y,
-							Event.mouseButton.button
-					  );
-				annotator.onMouseClick(	Event.mouseButton.x, 
-										Event.mouseButton.y,
-										Event.mouseButton.button
-									);
+				printf( "sf::Event mouseUp\n" );
+
+				//do mouseUp
+				MouseEvent e(	sf::Vector2f( Event.mouseButton.x, Event.mouseButton.y ),
+								Event.mouseButton.button,
+								annotator.canvas.getTransform()
+							);
+				annotator.canvas.internal_onMouseUp( e );
 			}
 
+
 			if( Event.type == sf::Event::MouseMoved )
-			{
-				//TODO: maintain bool to check if left was down, for drag
-				annotator.onMouseMove(	Event.mouseMove.x, 
-										Event.mouseMove.y
-									  );
+			{	
+				printf( "sf::Event mouseMoved\n" );
+				//do mouseMove
+				MouseEvent e(	sf::Vector2f( Event.mouseMove.x, Event.mouseMove.y ),
+								annotator.canvas.getTransform()
+							);
+				annotator.canvas.internal_onMouseMove( e );
 			}
 
         }
@@ -111,11 +125,14 @@ int main()
 //		bool isAPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 //		bool isSPressed			= sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 		
-//		if(isSpacePressed)
-//		{
-//			;
-//		}
-
+/*		if(isSpacePressed)
+		{
+			if( annotator.isPlaying() )
+				annotator.stop();
+			else
+				annotator.play();
+		}
+*/
 
         // Set the active window before draw
 		App.setActive();

@@ -21,6 +21,7 @@ public:
 
 // stream stuff
 	std::list<Stream*> streams;
+	bool isPlaying;
 
 	bool addVideoStream( char* filename )
 	{
@@ -69,6 +70,8 @@ public:
 		{
 			(*it)->play();
 		}
+
+		isPlaying = true;
 	}
 
 	void stop()
@@ -78,6 +81,8 @@ public:
 		{
 			(*it)->stop();
 		}
+
+		isPlaying = false;
 	}
 
 	void seek( double milliseconds )
@@ -102,26 +107,31 @@ public:
 		int elapsed = clock.getElapsedTime().asMilliseconds();
 		clock.restart();
 
-		//streams.
-		std::list<Stream*>::iterator it;
-		for( it = streams.begin(); it != streams.end(); ++it )
-		{
-			(*it)->update( elapsed );
-		}
 
-		timeline.update( elapsed );//_cursor( (*(streams.begin()))->getCurrentPosition() );
+		if( this->isPlaying )
+		{
+			//streams.
+			std::list<Stream*>::iterator it;
+			for( it = streams.begin(); it != streams.end(); ++it )
+			{
+				(*it)->update( elapsed );
+			}
+
+			timeline.update( elapsed );//_cursor( (*(streams.begin()))->getCurrentPosition() );
+		}
 
 	}
 
 // mouse stuff
-	
+/*	(OLD)
+
 	void onMouseMove( float x, float y )
 	{	canvas.onMouseMove( x, y );	}
 	void onMouseClick( float x, float y, sf::Mouse::Button which )
 	{	canvas.onMouseClick( x, y, which );	}
 	void onMouseDrag( float x, float y, sf::Mouse::Button which )
 	{	canvas.onMouseDrag( x, y, which );	}
-
+*/
 
 // draw stuff
 	DrawList canvas;
@@ -147,6 +157,9 @@ public:
 	{
 		timeline.annotator = this;
 		init_draw();
+		stop();
+
+		canvas.name = "The Annotator, Canvas";
 	}
 
 // cleanup stuff

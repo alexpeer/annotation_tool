@@ -29,7 +29,7 @@ public:
 
 	}
 
-	void setText( char* new_text )
+	void setText( const char* new_text )
 	{
 		words.sf.setString( new_text );
 		
