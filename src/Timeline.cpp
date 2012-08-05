@@ -4,9 +4,9 @@
 // Tickmarks Stuff
 	void Timeline_Tickmarks::onMouseClick( MouseEvent &e )
 	{
-		printf( "Tickmarks: click: %f, %f\n", e.mousePos_global.x, e.mousePos_global.y );
-		printf( "\tTimeline pos: %f, %f\n", timeline->getPosition().x, timeline->getPosition().y );
-		printf( "\tTickmarks pos: %f, %f\n", getPosition().x, getPosition().y );
+		//printf( "Tickmarks: click: %f, %f\n", e.mousePos_global.x, e.mousePos_global.y );
+		//printf( "\tTimeline pos: %f, %f\n", timeline->getPosition().x, timeline->getPosition().y );
+		//printf( "\tTickmarks pos: %f, %f\n", getPosition().x, getPosition().y );
 		
 		if( e.left )
 		{

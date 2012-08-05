@@ -83,7 +83,7 @@ int main()
 // mouse events
 			if( Event.type == sf::Event::MouseButtonPressed )
 			{
-				printf( "sf::Event mouseDown\n" );
+				//printf( "sf::Event mouseDown\n" );
 				//do mouseDown
 				MouseEvent e(	sf::Vector2f( Event.mouseButton.x, Event.mouseButton.y ),
 								Event.mouseButton.button,
@@ -94,7 +94,7 @@ int main()
 			}
 			if( Event.type == sf::Event::MouseButtonReleased )
 			{
-				printf( "sf::Event mouseUp\n" );
+				//printf( "sf::Event mouseUp\n" );
 
 				//do mouseUp
 				MouseEvent e(	sf::Vector2f( Event.mouseButton.x, Event.mouseButton.y ),
@@ -107,7 +107,7 @@ int main()
 
 			if( Event.type == sf::Event::MouseMoved )
 			{	
-				printf( "sf::Event mouseMoved\n" );
+				//printf( "sf::Event mouseMoved\n" );
 				//do mouseMove
 				MouseEvent e(	sf::Vector2f( Event.mouseMove.x, Event.mouseMove.y ),
 								annotator.canvas.getTransform()

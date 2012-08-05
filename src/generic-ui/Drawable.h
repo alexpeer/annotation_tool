@@ -79,7 +79,7 @@ public:
 	// mouseable stuff, for passing down the list
 	//TODO: would rather have this hidden away, not part of the Drawable interface
 	virtual void internal_onMouseMove( MouseEvent e )
-	{	printf( "%s, Mousing\n", name.c_str() );
+	{	//printf( "%s, Mousing\n", name.c_str() );
 		this->internal_mousable.internal_onMouseMove( e );	}
 	virtual void internal_onMouseDown( MouseEvent e )
 	{	this->internal_mousable.internal_onMouseDown( e );	}
@@ -132,6 +132,12 @@ class Sprite :	public Drawable
 {
 public:
 	sf::Sprite sf;
+	sf::Texture image;
+
+	Sprite()
+	{	
+		sf.setTexture( image );	
+	}
 
 //	bool isPointInside( float x, float y )
 //	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
@@ -139,6 +145,11 @@ public:
 	float getHeight()			{	return sf.getLocalBounds().height;	}
 	sf::FloatRect getBounds()	{	return sf.getLocalBounds();			}
 	sf::FloatRect getClickBounds()	{ return getBounds();				}
+
+	bool loadImage( char * filename )
+	{
+		return image.loadFromFile( filename );
+	}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -246,8 +257,6 @@ public:
 		down->visible = true;
 	}
 
-//	virtual void onMouseDrag( MouseEvent &e )	{	return;		}
-//	virtual void onMouseDragRelease( MouseEvent &e )	{	return;		}
 };
 
 

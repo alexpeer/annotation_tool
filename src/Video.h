@@ -122,7 +122,8 @@ public:
 	void getNextFrame()
 	{
 		//frame = cvQueryFrame( capture );
-		bool result = capture.retrieve( frame );
+		bool result = capture.grab( );
+		result = capture.retrieve( frame );
 	}
 
 	void syncFrameToTexture()
@@ -173,6 +174,7 @@ public:
 	//CV_CAP_PROP_POS_FRAMES
 	//CV_CAP_PROP_POS_AVI_RATIO
 	//TODO for all seek: double check seek is accurate 
+/*	//TODO: let's always use millis, so all streams speak in the same units
 	double seek_percentage( float zero_to_one )
 	{		
 		//cvSetCaptureProperty( capture, CV_CAP_PROP_POS_AVI_RATIO, zero_to_one );
@@ -183,13 +185,14 @@ public:
 		millis_since_last_frame = 0;
 		return location;
 	}
-
+*/
 	double seek_millis( float millis )
 	{
 		//cvSetCaptureProperty( capture, CV_CAP_PROP_POS_MSEC, millis );
 		capture.set( CV_CAP_PROP_POS_MSEC, millis );
 		getNextFrame();
 		syncLocation();
+		if( ! isPlaying )	syncFrameToTexture(); // display frame now, if not playing
 		playTimer.restart();
 		millis_since_last_frame = millis - location;
 		return location;
@@ -202,10 +205,10 @@ public:
 
 		//sf::Time elapsed_milliseconds = playTimer.getElapsedTime().asMilliseconds();
 
-
 		millis_since_last_frame += elapsed_milliseconds;
 
 		total_elapsed_playtime += elapsed_milliseconds;
+		//printf( "Video: %s\n\tTotal Playime: %f", name.c_str(), total_elapsed_playtime );
 
 		if( millis_since_last_frame < millis_per_frame )
 			return;
@@ -224,47 +227,6 @@ public:
 			}
 			millis_since_last_frame -= millis_per_frame;
 		}
-
-/*		while( curr_pos < total_elapsed_playtime )
-		{
-			result = capture.grab(); // should just advance frame
-			if( result == false ) // retrieve error; probably end of stream?
-			{	
-				stop();
-				break;
-			}
-			curr_pos += millis_per_frame;
-			//syncLocation();
-		}
-*/
-		
-
-/*		if( curr_pos + millis_per_frame >= total_elapsed_playtime )
-		{
-			result = capture.grab();
-			if(result == false)
-			{
-				stop();
-			}
-			else
-			{
-				curr_pos + millis_per_frame;
-				syncLocation();
-			}
-		}
-		else
-		{
-			capture.set( CV_CAP_PROP_POS_MSEC, total_elapsed_playtime );
-			result = capture.grab();
-			if(result == false)
-			{	stop();		}
-			else
-			{	curr_pos = location;
-				syncLocation();
-			}
-		}
-*/
-
 
 		if( isPlaying )
 		{

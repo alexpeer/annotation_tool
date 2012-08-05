@@ -198,6 +198,9 @@
 		LinkListable *cursor = (LinkListable*)getHead();
 		Drawable *drawable = (Drawable*)cursor;
 
+		if( cursor == NULL ) //empty list
+			return sf::FloatRect( 0, 0, 0, 0 );
+
 		sf::FloatRect cb; //cursorBounds
 		cb = drawable->getBounds();
 		cursor = cursor->next;
@@ -263,7 +266,7 @@
 	
 	void DrawList::internal_onMouseMove( MouseEvent e )
 	{
-		printf( "%s, Mousing, move\n", name.c_str() );
+		//printf( "%s, Mousing, move\n", name.c_str() );
 		
 		this->internal_mousable.internal_onMouseMove( e );
 
@@ -306,7 +309,7 @@
 	void DrawList::internal_onMouseUp( MouseEvent e )
 	{
 
-		printf( "%s, Mousing, up\n", name.c_str() );
+		//printf( "%s, Mousing, up\n", name.c_str() );
 		
 		this->internal_mousable.internal_onMouseUp( e );
 

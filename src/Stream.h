@@ -51,9 +51,11 @@ public:
 		}
 
 		double result_millis = video.seek_millis( milliseconds );
-		if( result_millis != milliseconds )
+		if( result_millis < milliseconds - video.millis_per_frame ||
+			result_millis > milliseconds)
+		// we're allowed to be back by a frame (it should handle the difference internally), but forward could be a problem
 		{
-			printf( "WARNING: video stream seek: %s\n\tresult not exact, off by: %f", video.name.c_str(), result_millis - milliseconds );
+			printf( "WARNING: video stream seek: %s\n\tresult not exact, off by: %f\n", video.name.c_str(), result_millis - milliseconds );
 		}
 	}
 
@@ -78,9 +80,11 @@ public:
 class AudioStream : public Stream
 {
 public:
-	AudioStream()	{	type = AUDIO;	}
+	AudioStream()	{	type = AUDIO;	curr_pos = 0;	}
 
-	void play() {	audio.play();	}
+	double curr_pos; // maintain here, to workaround "always play on seek" bug
+
+	void play() {	audio.setPlayingOffset( sf::milliseconds( curr_pos ) );	}
 	void stop()	{	audio.pause();	}
 	void seek( double milliseconds )
 	{
@@ -89,18 +93,28 @@ public:
 			return;
 		}
 
+		bool wasPaused = false;
+
 		sf::SoundSource::Status status = audio.getStatus();
 		//have to be paused or playing before we can seek
 		if( status == sf::SoundSource::Status::Stopped )
 		{	
-			audio.play();
+			//audio.play();
 			audio.pause();
+
+			wasPaused = true;
 		}
-		audio.setPlayingOffset(  sf::milliseconds( milliseconds ) );
+		if( status == sf::SoundSource::Status::Paused )
+			wasPaused = true;
+
+		//audio.setPlayingOffset( sf::milliseconds( milliseconds ) );
+		audio.pause();
+
+		curr_pos = milliseconds;
 	}
 
 	void update( double elapsed_milliseconds )
-	{	;	}
+	{	curr_pos += elapsed_milliseconds;	}
 
 	double getDuration()		{	return audio.getDuration().asMilliseconds();		}
 	double getCurrentPosition()	{	return audio.getPlayingOffset().asMilliseconds();	}
