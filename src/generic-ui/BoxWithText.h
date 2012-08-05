@@ -29,6 +29,15 @@ public:
 
 	}
 
+	void setText( char* new_text )
+	{
+		words.sf.setString( new_text );
+		
+		//TODO: wrap text?
+
+		sizeBoxToText();
+	}
+
 	void sizeBoxToText()
 	//TODO: do this autmatically on text change, resize
 	{		

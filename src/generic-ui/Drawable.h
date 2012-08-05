@@ -5,6 +5,7 @@
 #include <SFML/OpenGL.hpp>
 #include <string>
 
+#include "Mousable.h"
 
 class LinkListable
 {
@@ -49,7 +50,8 @@ private:
 };
 
 class Drawable :	public LinkListable, 
-					public sf::Drawable, public sf::Transformable
+					public sf::Drawable,
+					public IsMousable
 {
 friend class DrawList;
 public:
@@ -62,12 +64,27 @@ public:
 		name = "";
 	}
 
-	virtual bool isPointInside( float x, float y )  { return false; }
-	virtual bool onMouseMove( float x, float y )  { return false; }
-	virtual bool onMouseClick( float x, float y, sf::Mouse::Button which )  { return false; }
-	virtual bool onMouseDrag( float x, float y, sf::Mouse::Button which )  {	return false; }
+	virtual bool isPointInside( float x, float y )		{ return false; }
+
+	virtual void onMouseOver( MouseEvent &e )			{ return; }
+	virtual void onMouseOut( MouseEvent &e )			{ return; }
+	virtual void onMouseClick( MouseEvent &e )			{ return; }
+	virtual void onMouseDrag( MouseEvent &e )			{ return; }
+	virtual void onMouseDragRelease( MouseEvent &e )	{ return; }
 
 	virtual float getHeight() = 0;
+	virtual sf::FloatRect getBounds() = 0;
+	virtual sf::FloatRect getClickBounds() = 0;
+	
+	// mouseable stuff, for passing down the list
+	//TODO: would rather have this hidden away, not part of the Drawable interface
+	virtual void internal_onMouseMove( MouseEvent e )
+	{	printf( "%s, Mousing\n", name.c_str() );
+		this->internal_mousable.internal_onMouseMove( e );	}
+	virtual void internal_onMouseDown( MouseEvent e )
+	{	this->internal_mousable.internal_onMouseDown( e );	}
+	virtual void internal_onMouseUp( MouseEvent e )
+	{	this->internal_mousable.internal_onMouseUp( e );	}
 
 //private:
 	sf::Vector2f getParentPosition();
@@ -91,9 +108,19 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	bool isPointInside( float x, float y );
-	bool onMouseMove( float x, float y );
-	bool onMouseClick( float x, float y, sf::Mouse::Button which );
-	bool onMouseDrag( float x, float y, sf::Mouse::Button which );
+
+	//void onMouseOver( MouseEvent &e );
+	//void onMouseOut( MouseEvent &e );
+	//void onMouseClick( MouseEvent &e );
+	//void onMouseDrag( MouseEvent &e );
+	//void onMouseDragRelease ( MouseEvent &e );
+
+	virtual void internal_onMouseMove( MouseEvent e );
+	virtual void internal_onMouseDown( MouseEvent e );
+	virtual void internal_onMouseUp( MouseEvent e );
+	
+	sf::FloatRect getBounds();
+	sf::FloatRect getClickBounds();
 
 	float getHeight();
 };
@@ -106,13 +133,12 @@ class Sprite :	public Drawable
 public:
 	sf::Sprite sf;
 
-	bool isPointInside( float x, float y )
-	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+//	bool isPointInside( float x, float y )
+//	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
 	
-	float getHeight()
-	{
-		return sf.getLocalBounds().height;
-	}
+	float getHeight()			{	return sf.getLocalBounds().height;	}
+	sf::FloatRect getBounds()	{	return sf.getLocalBounds();			}
+	sf::FloatRect getClickBounds()	{ return getBounds();				}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -136,9 +162,18 @@ public:
 		return bounds.contains( sf::Vector2f( x - parentPos.x, y - parentPos.y ) );	
 	}
 
-	float getHeight()
+	float getHeight()			{	return sf.getLocalBounds().height;	}
+	sf::FloatRect getBounds()	{	return sf.getLocalBounds();			}
+	sf::FloatRect getClickBounds()	{ return getBounds();				}
+
+	void setSize( int width, int height )
 	{
-		return sf.getLocalBounds().height;
+		sf.setSize( sf::Vector2f( width, height ) );
+	}
+
+	void setColor( int r, int g, int b )
+	{
+		sf.setFillColor( sf::Color( r, g, b ) );
 	}
 
 private:
@@ -155,18 +190,66 @@ public:
 //	void setString( const String &string )
 //	{	sf.setString( string );	}
 
-	bool isPointInside( float x, float y )
-	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
-	
-	float getHeight()
-	{
-		return sf.getLocalBounds().height;
-	}
+//	bool isPointInside( float x, float y )
+//	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
+
+	float getHeight()			{	return sf.getLocalBounds().height;	}
+	sf::FloatRect getBounds()	{	return sf.getLocalBounds();			}
+	sf::FloatRect getClickBounds()	{ return getBounds();				}
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{	states.transform.combine( this->getTransform() );	target.draw( sf, states );	}
 	
 };
+
+class Button : public DrawList
+{
+public:
+
+	Drawable *off, *over, *down;
+
+	Button()
+	{
+		//over->visible = false;
+		//down->visible = false;
+
+		//off->visible = true;
+		name = "Button";
+	}
+
+
+	void onMouseOver( MouseEvent &e )
+	{
+		printf( "%s, mouse over\n", name.c_str() );
+		down->visible = false;
+		off->visible = false;
+
+		over->visible = true;
+	}	
+	
+	void onMouseOut( MouseEvent &e )
+	{
+		printf( "%s, mouse out\n", name.c_str() );
+		over->visible = false;
+		down->visible = false;
+
+		off->visible = true;
+	}
+
+	void onMouseClick( MouseEvent &e )
+	{
+		printf( "%s, mouse click\n", name.c_str() );
+		over->visible = false;
+		off->visible = false;
+
+		down->visible = true;
+	}
+
+//	virtual void onMouseDrag( MouseEvent &e )	{	return;		}
+//	virtual void onMouseDragRelease( MouseEvent &e )	{	return;		}
+};
+
+
 
 #endif

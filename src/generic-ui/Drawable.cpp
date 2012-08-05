@@ -17,7 +17,7 @@
 
 		next->prev = prev;
 		prev->next = next;
-		//notify Reaper of orphan?
+		//notify Reaper of orphan? //TODO: invent Reaper
 
 		if( owner->head == this )
 			owner->head = NULL;
@@ -116,8 +116,7 @@
 	LinkListable* LinkList::getHead() const		{	return head;	}
 
 //:::::::: Drawable
-
-	
+		
 	sf::Vector2f Drawable::getParentPosition()
 	{
 
@@ -159,9 +158,8 @@
 
 	float DrawList::getHeight( )
 	{
-
-		 LinkListable *cursor = (LinkListable*)getHead();
-		 Drawable *drawable = (Drawable*)cursor;
+		LinkListable *cursor = (LinkListable*)getHead();
+		Drawable *drawable = (Drawable*)cursor;
 
 		float biggest = 0;
 		float thisHeight = 0;
@@ -194,52 +192,135 @@
 		return false;
 	}
 
-	bool DrawList::onMouseMove( float x, float y )
-	{		
-		if( areChildrenMousable == false )
-			return false;
-
-		bool result = false;
-		for( const LinkListable *cursor = (LinkListable*)getHead(); 
-			 cursor != NULL;
-			 cursor = cursor->next
-		   )
-		{
-			if( ((Drawable*)cursor)->onMouseMove( x, y ) )
-				result = true;
-		}
-		return result;
-	}
-	bool DrawList::onMouseClick( float x, float y, sf::Mouse::Button which )
+	sf::FloatRect DrawList::getBounds()
 	{
-		if( areChildrenMousable == false )
-			return false;
+		float left, right, top, bottom;	
+		LinkListable *cursor = (LinkListable*)getHead();
+		Drawable *drawable = (Drawable*)cursor;
 
-		bool result = false;
-		for( const LinkListable *cursor = (LinkListable*)getHead(); 
-			 cursor != NULL;
-			 cursor = cursor->next
-		   )
+		sf::FloatRect cb; //cursorBounds
+		cb = drawable->getBounds();
+		cursor = cursor->next;
+
+		left = cb.left;
+		top = cb.top;
+
+		right = cb.left + cb.width;
+		bottom = cb.top + cb.height;
+
+		while( cursor != NULL )
 		{
-			if( ((Drawable*)cursor)->onMouseClick( x, y, which ) )
-				result = true;
+			drawable = (Drawable*)cursor;
+
+			cb = drawable->getBounds();
+			if( left > cb.left )	left = cb.left;
+			if( top > cb.top )		top = cb.top;
+			if( right < cb.width + cb.left )	right = cb.width + cb.left;
+			if( bottom < cb.height + cb.top )	bottom = cb.height + cb.top;
+
+			cursor = cursor->next;
 		}
-		return result;
+
+		return sf::FloatRect( left, top, right - left, bottom - top );
+	}
+	sf::FloatRect  DrawList::getClickBounds()
+	{
+		float left, right, top, bottom;	
+		LinkListable *cursor = (LinkListable*)getHead();
+		Drawable *drawable = (Drawable*)cursor;
+
+		//empty list, return empty bounds
+		if(cursor == NULL)
+			return sf::FloatRect( 0, 0, 0, 0 );
+
+		sf::FloatRect cb; //cursorBounds
+		cb = drawable->getClickBounds();
+		cursor = cursor->next;
+
+		left = cb.left;
+		top = cb.top;
+
+		right = cb.left + cb.width;
+		bottom = cb.top + cb.height;
+
+		while( cursor != NULL )
+		{
+			drawable = (Drawable*)cursor;
+
+			cb = drawable->getClickBounds();
+			if( left > cb.left )				left = cb.left;
+			if( top > cb.top )					top = cb.top;
+			if( right < cb.width + cb.left )	right = cb.width + cb.left;
+			if( bottom < cb.height + cb.top )	bottom = cb.height + cb.top;
+
+			cursor = cursor->next;
+		}
+
+		return sf::FloatRect( left, top, right - left, bottom - top );
 	}
 
-	bool DrawList::onMouseDrag( float x, float y, sf::Mouse::Button which )
+	// DrawList mouseable stuff, for passing internal mouse event handling down the tree
+	
+	void DrawList::internal_onMouseMove( MouseEvent e )
 	{
-		if( areChildrenMousable == false )
-			return false;
+		printf( "%s, Mousing, move\n", name.c_str() );
+		
+		this->internal_mousable.internal_onMouseMove( e );
 
-		bool result = false;
+		// have to do this again here, as we aren't passing the value back out from internal_mousable; using this elsewhere for de-facto "pop" of state stack, reverting transform.  So, this is a neccesary hack for the moment.
+		e.transform.combine( getTransform() );
+
+		if( areChildrenMousable == false )
+			return;
+
 		for( const LinkListable *cursor = (LinkListable*)getHead(); 
 			 cursor != NULL;
 			 cursor = cursor->next
 		   )
 		{
-			if( ((Drawable*)cursor)->onMouseDrag( x, y, which ) )
-				result = true;
+			((Drawable*)cursor)->internal_onMouseMove( e );				
 		}
-		return result;
+	}
+	void DrawList::internal_onMouseDown( MouseEvent e )
+	{
+
+		printf( "%s, Mousing, down\n", name.c_str() );
+		
+		this->internal_mousable.internal_onMouseDown( e );
+
+		// have to do this again here, as we aren't passing the value back out from internal_mousable; using this elsewhere for de-facto "pop" of state stack, reverting transform.  So, this is a neccesary hack for the moment.
+		e.transform.combine( getTransform() );
+
+		if( areChildrenMousable == false )
+			return;
+
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			((Drawable*)cursor)->internal_onMouseDown( e );				
+		}
+	}
+
+	void DrawList::internal_onMouseUp( MouseEvent e )
+	{
+
+		printf( "%s, Mousing, up\n", name.c_str() );
+		
+		this->internal_mousable.internal_onMouseUp( e );
+
+		// have to do this again here, as we aren't passing the value back out from internal_mousable; using this elsewhere for de-facto "pop" of state stack, reverting transform.  So, this is a neccesary hack for the moment.
+		e.transform.combine( getTransform() );
+
+		if( areChildrenMousable == false )
+			return;
+
+		for( const LinkListable *cursor = (LinkListable*)getHead(); 
+			 cursor != NULL;
+			 cursor = cursor->next
+		   )
+		{
+			((Drawable*)cursor)->internal_onMouseUp( e );				
+		}
 	}
