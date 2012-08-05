@@ -134,21 +134,45 @@ public:
 	sf::Sprite sf;
 	sf::Texture image;
 
+	float width, height;
+
 	Sprite()
-	{	
-		//sf.setTexture( image );	
+	{	width = 100;
+		height = 100;
 	}
 
 //	bool isPointInside( float x, float y )
 //	{	return sf.getGlobalBounds().contains( sf::Vector2f( x, y ) );	}
 	
+	void setSize( float w, float h )
+	{
+		width = w;
+		height = h;
+		
+		// rescale image
+		sf.setScale(  1, 1 );
+		sf::FloatRect size = sf.getGlobalBounds();
+		float wScale = width / size.width;
+		float hScale = height / size.height;
+		sf.setScale(  wScale, hScale );
+	}
+
 	float getHeight()			{	return sf.getLocalBounds().height;	}
 	sf::FloatRect getBounds()	{	return sf.getLocalBounds();			}
 	sf::FloatRect getClickBounds()	{ return getBounds();				}
 
 	bool loadImage( char * filename )
 	{
-		return image.loadFromFile( filename );
+		if( !image.loadFromFile( filename ) )
+			return false;
+		
+		sf.setTexture( image );
+
+		sf::FloatRect size = sf.getGlobalBounds();
+		float wScale = width / size.width;
+		float hScale = height / size.height;
+		sf.setScale(  wScale, hScale );
+		return true;
 	}
 
 private:

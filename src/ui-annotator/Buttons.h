@@ -15,6 +15,8 @@ public:
 	RectangleShape box;
 	TheAnnotator * theBoss;
 
+	float width, height;
+
 	Button_Play( )
 	{
 		bg.loadImage( "./resources/play.jpg" );
@@ -25,19 +27,26 @@ public:
 
 		add( bg );
 
-		box.setSize( 40, 40 );
-		add( box );
+		setSize( 40, 40 );
+		//add( box );
 
 		theBoss = NULL;
 
 		name = "Play Button";
 	}
 
+	void setSize( float w, float h )
+	{
+		width = w;
+		height = h;
+		bg.setSize( width, height );
+	}
+
 	void onMouseClick( MouseEvent &e );
 
 	sf::FloatRect getBounds()
 	{
-		return box.sf.getLocalBounds();
+		return sf::FloatRect( 0, 0, width, height );
 	}
 
 	sf::FloatRect getClickBounds()

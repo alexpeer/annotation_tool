@@ -117,8 +117,9 @@
 
 		video_area.setPosition( 0, 0 );
 
-		button_play.setPosition(	(width / 2) - button_play.getBounds().width, 
-									timeline.getBounds().height + timeline.getPosition().y 
+		button_play.setSize( 40, 40 );
+		button_play.setPosition(	(width / 2) - (button_play.getBounds().width / 2), 
+									40 + timeline.getBounds().height + timeline.getPosition().y 
 								);
 	}
 
