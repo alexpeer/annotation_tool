@@ -12,16 +12,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\generic-ui\Drawable.cpp" />
+    <ClCompile Include="src\generic-ui\Mousable.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TheAnnotator.cpp" />
     <ClCompile Include="src\Timeline.cpp" />
+    <ClCompile Include="src\ui-annotator\Buttons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\generic-ui\BoxWithText.h" />
     <ClInclude Include="src\generic-ui\Drawable.h" />
+    <ClInclude Include="src\generic-ui\Mousable.h" />
     <ClInclude Include="src\generic-ui\ui.h" />
     <ClInclude Include="src\Stream.h" />
     <ClInclude Include="src\TheAnnotator.h" />
     <ClInclude Include="src\Timeline.h" />
+    <ClInclude Include="src\ui-annotator\Buttons.h" />
     <ClInclude Include="src\Video.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
