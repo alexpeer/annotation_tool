@@ -136,7 +136,7 @@ public:
 
 	Sprite()
 	{	
-		sf.setTexture( image );	
+		//sf.setTexture( image );	
 	}
 
 //	bool isPointInside( float x, float y )

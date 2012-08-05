@@ -115,11 +115,11 @@
 		timeline.setPosition(	(width/2) - (timeline.width / 2),
 								500 );
 
+		video_area.setPosition( 0, 0 );
+
 		button_play.setPosition(	(width / 2) - button_play.getBounds().width, 
 									timeline.getBounds().height + timeline.getPosition().y 
 								);
-
-		button_play.setPosition( 0, 0 );
 	}
 
 	TheAnnotator::TheAnnotator()
