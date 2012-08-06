@@ -126,6 +126,7 @@ public:
 	}
 
 	void onMouseClick( MouseEvent &e );
+	void onMouseDrag( MouseEvent &e );
 
 	sf::FloatRect getClickBounds()
 	{
@@ -190,11 +191,6 @@ friend Timeline_Tickmarks;
 	double get_endTime()
 	{
 		return tickmarks.get_endTime();
-	}
-
-	void onMouseDrag( MouseEvent &e )
-	{
-		return;
 	}
 
 	sf::FloatRect getClickBounds()

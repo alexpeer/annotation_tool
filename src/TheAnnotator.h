@@ -40,6 +40,11 @@ public:
 
 	void seek_percentage( double zero_to_one );
 	
+	void internal_seek( double milliseconds ); // used during update
+
+	bool seek_requested;
+	double seek_to;
+	
 // update stuff
 	sf::Clock clock;
 	void update();

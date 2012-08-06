@@ -24,6 +24,24 @@
 			timeline->annotator->seek_percentage( seek_to_percent );
 		}
 	}
+	void Timeline_Tickmarks::onMouseDrag( MouseEvent &e )
+	{
+		if( e.left )
+		{
+			// left click drags in the tickmarks area seeks
+
+			//get mouse location relative to tickmark area
+			sf::Vector2f pos = e.getPos_local();
+			float seek_to_percent = pos.x / width;
+
+			printf( "Timeline: left drag in tickmarks: %f\n", seek_to_percent );
+
+			position_millis =  get_endTime() * seek_to_percent;
+			update( 0 );
+
+			timeline->annotator->seek_percentage( seek_to_percent );
+		}
+	}
 
 
 // Timeline Stuff

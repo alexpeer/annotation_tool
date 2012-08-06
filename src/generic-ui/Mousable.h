@@ -17,13 +17,15 @@ public:
 
 	sf::Vector2f mouseDownPoint_local; //only contains info 
 
-	bool left, right, middle;
+	bool left, right, middle; //these are maintained in the MouseStuff, so the internal_ functions may not have accurate info from the event obj (they build it), but onX funcs should
+	sf::Mouse::Button button;
 
 	sf::Vector2f getPos_local()
 	{
 		return transform_inverse.transformPoint( mousePos_global );
 	}
 
+	
 	MouseEvent(	sf::Vector2f mousePos_global, 
 				bool isLeftDown, bool isRightDown, bool isMiddleDown, 
 				sf::Transform transform )
@@ -37,6 +39,7 @@ public:
 		middle = isMiddleDown;
 	}
 	
+	
 	MouseEvent(	sf::Vector2f mousePos_global, 
 				sf::Mouse::Button which, 
 				sf::Transform transform )
@@ -44,6 +47,7 @@ public:
 		left		= ( which == sf::Mouse::Button::Left )	? true : false;
 		right		= ( which == sf::Mouse::Button::Right )	? true : false;
 		middle	= ( which == sf::Mouse::Button::Middle )	? true : false;
+		button = which;
 
 		this->mousePos_global = mousePos_global;
 		this->transform = transform;
@@ -56,6 +60,8 @@ public:
 		left = false;
 		right = false;
 		middle = false;
+
+		button = sf::Mouse::Button::ButtonCount; // as good as NULL; TODO: replace sf::Mouse
 
 		this->mousePos_global = mousePos_global;
 		this->transform = transform;
@@ -74,11 +80,16 @@ public:
 		wasMouseOver = false;
 		wasDragging = false;
 		wasDownIn = false;
+
+		leftDown = false;
+		middleDown = false;
+		rightDown = false;
 	}
 
 	IsMousable *chief;
 
 	bool wasMouseOver, wasDragging, wasDownIn;
+	bool leftDown, middleDown, rightDown;
 	sf::Vector2f mouseDownPoint_local;
 
 	virtual void internal_onMouseMove( MouseEvent e );

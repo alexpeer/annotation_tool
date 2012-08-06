@@ -64,16 +64,21 @@
 
 	void TheAnnotator::seek( double milliseconds )
 	{
-		std::list<Stream*>::iterator it;
-		for( it = streams.begin(); it != streams.end(); ++it )
-		{	(*it)->seek( milliseconds );	}
-
+		seek_requested = true;
+		seek_to = milliseconds;
 	}
 
 	void TheAnnotator::seek_percentage( double zero_to_one )
 	{
 		double seek_to_milliseconds = timeline.get_endTime() * zero_to_one;
 		seek( seek_to_milliseconds );
+	}
+
+	void TheAnnotator::internal_seek( double milliseconds )
+	{
+		std::list<Stream*>::iterator it;
+		for( it = streams.begin(); it != streams.end(); ++it )
+		{	(*it)->seek( milliseconds );	}
 	}
 	
 // update stuff
@@ -83,6 +88,11 @@
 		int elapsed = clock.getElapsedTime().asMilliseconds();
 		clock.restart();
 
+		if( seek_requested )
+		{
+			seek_requested = false;
+			internal_seek( seek_to );
+		}
 
 		if( this->isPlaying )
 		{
@@ -128,6 +138,9 @@
 		timeline.annotator = this;
 		init_draw();
 		stop();
+
+		seek_requested = false;
+		seek_to = 0;
 
 		canvas.name = "The Annotator, Canvas";
 		

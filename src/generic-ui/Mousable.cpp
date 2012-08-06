@@ -8,6 +8,10 @@
 		e.transform_inverse = e.transform.getInverse();
 
 		sf::Vector2f mousePos_local = e.getPos_local();
+		
+		e.left = leftDown;
+		e.right = rightDown;
+		e.middle = middleDown;
 
 		//DEBUG//
 		//printf("\tMousePos_G: %d, %d\n", (int)e.mousePos_global.x, (int)e.mousePos_global.y );
@@ -57,6 +61,10 @@
 
 		sf::Vector2f mousePos_local = e.getPos_local();
 
+		if( e.button == sf::Mouse::Button::Left )			leftDown = true;
+		else if( e.button == sf::Mouse::Button::Right )		rightDown = true;
+		else if( e.button == sf::Mouse::Button::Middle )	middleDown = true;
+
 		sf::FloatRect bounds = chief->getClickBounds();
 		if( bounds.contains( mousePos_local ) )
 		{
@@ -74,6 +82,14 @@
 
 		sf::Vector2f mousePos_local = e.getPos_local();
 
+		if( e.button == sf::Mouse::Button::Left )			leftDown = false;
+		else if( e.button == sf::Mouse::Button::Right )		rightDown = false;
+		else if( e.button == sf::Mouse::Button::Middle )	middleDown = false;
+
+		e.left = leftDown;
+		e.right = rightDown;
+		e.middle = middleDown;
+
 		sf::FloatRect bounds = chief->getClickBounds();
 		if( bounds.contains( mousePos_local ) )
 		{
@@ -89,6 +105,9 @@
 			chief->onMouseDragRelease( e );
 		}
 
-		wasDownIn = false;
-		wasDragging = false;
+		if( !leftDown && !rightDown && !middleDown )
+		{
+			wasDownIn = false;
+			wasDragging = false;
+		}
 	}
