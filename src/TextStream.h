@@ -2,35 +2,49 @@
 #define TEXTSTREAM_IS_FULL_OF_WELL_READ_FISH
 
 #include "Stream.h"
+#include "EventList.h"
 #include <list>
 #include <string>
 
-class TextEvent
+class ShowTextEvent : public Event
 {
 public:
 	std::string words;
+	Stream * parent;
+
+	DrawList * target;
+
+	TextEvent_Drawable drawable;
+
+	void activate()
+	{
+		target->add( drawable );
+	}
+
+	void deactivate()
+	{
+		drawable.remove();
+	}
+}
+
+class TextAnnotationEvent : public EventWithDuration
+{
+public:
+
+	//TODO: now needs draw target
+	DrawList * drawTarget;
+	TextEvent startEvent;
+	EventInverse stopEvent;
 	
-	// times in milliseconds
-	double start;
-	double stop;
 
-	TextEvent( double start = 0, double stop = 0, char* text = "" )
+	TextEvent( double startTime = 0, double stopTime = 0, char* text = "" )
 	{
-		this->start = start;
-		this->stop = stop;
+
+		startEvent->when = startTime;
+		stopEvent = EventInverse( start );
+		stopEvent->when = stopTime;
+
 		words = text;
-	}
-
-	bool isActiveAtTime( double milliseconds )
-	{
-		if( milliseconds >= start && milliseconds <= stop )
-			return true;
-		return false;
-	}
-
-	bool operator<( TextEvent &rightArg )
-	{
-		return (this->stop < rightArg.start);
 	}
 
 };
