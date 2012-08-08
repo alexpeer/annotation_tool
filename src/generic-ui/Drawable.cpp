@@ -287,7 +287,7 @@
 	void DrawList::internal_onMouseDown( MouseEvent e )
 	{
 
-		printf( "%s, Mousing, down\n", name.c_str() );
+		//printf( "%s, Mousing, down\n", name.c_str() );
 		
 		this->internal_mousable.internal_onMouseDown( e );
 

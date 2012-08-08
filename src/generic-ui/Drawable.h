@@ -256,7 +256,7 @@ public:
 
 	void onMouseOver( MouseEvent &e )
 	{
-		printf( "%s, mouse over\n", name.c_str() );
+		//printf( "%s, mouse over\n", name.c_str() );
 		down->visible = false;
 		off->visible = false;
 
@@ -265,7 +265,7 @@ public:
 	
 	void onMouseOut( MouseEvent &e )
 	{
-		printf( "%s, mouse out\n", name.c_str() );
+		//printf( "%s, mouse out\n", name.c_str() );
 		over->visible = false;
 		down->visible = false;
 
@@ -274,7 +274,7 @@ public:
 
 	void onMouseClick( MouseEvent &e )
 	{
-		printf( "%s, mouse click\n", name.c_str() );
+		//printf( "%s, mouse click\n", name.c_str() );
 		over->visible = false;
 		off->visible = false;
 

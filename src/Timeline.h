@@ -89,7 +89,7 @@ public:
 
 		cursor.sf.setPosition( move_to_x, 0 );
 
-		setWordsToMillis( position_millis, cursorTime.words );
+		setWordsToMillis( position_millis, cursorTime.words, true );
 
 		//center the text under the cursor
 		cursorTime.sizeBoxToText();
@@ -109,9 +109,9 @@ public:
 		return endTime_millis;
 	}
 
-	void setWordsToMillis( const double &millis, Text &words )
+	void setWordsToMillis( const double &millis, Text &words, bool appendMillis = false )
 	{
-		char buffer[9];
+		char buffer[20]; //TODO: enforce buffer limit!!
 
 		int seconds = millis / 1000;
 		int minutes = seconds / 60;
@@ -119,7 +119,10 @@ public:
 		int hours = minutes / 60;
 		minutes = minutes % 60;
 		
-		sprintf( buffer, "%02d:%02d:%02d", hours, minutes, seconds );
+		if( appendMillis )
+			sprintf( buffer, "%02d:%02d:%02d\n%d", hours, minutes, seconds, (int)millis );
+		else
+			sprintf( buffer, "%02d:%02d:%02d", hours, minutes, seconds );
 		
 		words.sf.setString( buffer );
 

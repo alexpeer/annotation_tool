@@ -6,7 +6,9 @@
 #include <list>
 #include <string>
 
-class ShowTextEvent : public Event
+#include "TextArea.h"
+
+class Event_ShowText : public Event
 {
 public:
 	std::string words;
@@ -25,30 +27,34 @@ public:
 	{
 		drawable.remove();
 	}
-}
+};
 
-class TextAnnotationEvent : public EventWithDuration
+class Event_TextAnnotation : public EventWithDuration
 {
 public:
 
 	//TODO: now needs draw target
 	DrawList * drawTarget;
-	TextEvent startEvent;
-	EventInverse stopEvent;
+	Event_ShowText start;
+	EventInverse stop;
 	
 
-	TextEvent( double startTime = 0, double stopTime = 0, char* text = "" )
+	Event_TextAnnotation( double startTime = 0, double stopTime = 0, char* text = "" )
 	{
+		
+		startEvent = &start;
+		stopEvent = &stop;
 
-		startEvent->when = startTime;
-		stopEvent = EventInverse( start );
-		stopEvent->when = stopTime;
+		start.when = startTime;
+		stop.makeInverseOf( &start );
+		stop.when = stopTime;
 
-		words = text;
+		start.words = text;
 	}
 
 };
 
+/*
 class TextStream : public Stream
 {
 public:
@@ -93,9 +99,11 @@ public:
 		if( curr_pos->start < milliseconds )
 		// moving left
 		{
+			// we want the event one before the desired position to be active
+			// so, going left; go until we're at time or first before
 			while(true)
 			{
-				if( (*curr_pos).isActiveAtTime( milliseconds ) )
+				if( (*curr_pos).when )
 				{
 					isActive = true;
 					break;
@@ -162,6 +170,8 @@ public:
 		//TODO: add in order, instead of sort
 		events.sort();
 
+		//TODO: also index, for binary search-style nav
+
 		iteratorInit();
 		seek( cur_pos_milliseconds );
 	}
@@ -172,5 +182,6 @@ public:
 	}
 
 };
+*/
 
 #endif

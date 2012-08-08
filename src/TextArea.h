@@ -65,49 +65,6 @@ public:
 		height = h;
 	}
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		const LinkListable *cursor = (LinkListable*)getHead();
-		const Drawable *drawable = (Drawable*)cursor;
-
-		states.transform.combine( this->getTransform() );
-
-		float position = 0;
-		float padding = 5;
-
-		TextEvent_Drawable drawing;
-
-		std::list<TextStream*>::const_iterator it;
-		for( it = streams.begin(); it != streams.end(); ++it )
-		{
-			// remove all DrawList children
-			//this->empty();
-
-			if( (*it)->isActive )
-			{
-				drawing.setLabel( (*it)->name.c_str() );
-				//drawing.setContent( it->
-			}
-		}
-		/*while( cursor != NULL )
-		{
-			drawable = (Drawable*)cursor;
-			if( drawable->visible )
-			{
-				drawable->setPosition( sf::Vector2f( 0, position ) );
-				position += drawable->
-				target.draw( *drawable, states );
-			}
-			cursor = cursor->next;
-		}*/
-	}
-
-	std::list<TextStream*> streams;
-	void addStream( TextStream * stream )
-	{
-		streams.push_back( stream );
-	}
-
 };
 
 
