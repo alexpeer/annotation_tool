@@ -10,6 +10,17 @@ public:
 
 	void setLabel( const char* label_text )
 	{
+		label.words.sf.setCharacterSize( 10 );
+		content.words.sf.setCharacterSize( 14 );
+
+		label.background.setColor( 172, 255, 161 );
+		content.background.setColor( 172, 255, 161 );
+
+		label.words.sf.setColor( sf::Color( 0, 0, 0 ) );
+		content.words.sf.setColor( sf::Color( 0, 0, 0 ) );
+
+		content.fixedWidth = 300;
+
 		label.setText(label_text );
 		label.setPosition( sf::Vector2f( 10.0f, 0.0f ) );
 		content.setPosition( sf::Vector2f( 0.0f, label.getHeight() ) );
@@ -46,8 +57,6 @@ public:
 		return sf::FloatRect();
 	}
 
-
-
 private:
 	BoxWithText label; 
 	BoxWithText content;
@@ -59,10 +68,22 @@ public:
 
 	float width, height;
 
+	//RectangleShape bg;
+
+	TextArea()
+	{
+		name = "TextArea";
+	}
+
 	TextArea( float w = 300, float h = 300 )
 	{
 		width = w;
 		height = h;
+
+		//bg.setSize( w, h );
+		//bg.setColor( 255, 0, 0 );
+
+		//add( bg );
 	}
 
 };

@@ -14,11 +14,11 @@ public:
 	//LinkListable *parent;
 	LinkListable *next, *prev;
 
-	LinkList *owner;
+	LinkList *parent;
 
 	LinkListable();
 
-	void remove();
+	void removeFromParent();
 
 	void append( LinkListable *thing );
 

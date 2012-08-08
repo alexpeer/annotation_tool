@@ -1,7 +1,7 @@
 #ifndef TEXTSTREAM_IS_FULL_OF_WELL_READ_FISH
 #define TEXTSTREAM_IS_FULL_OF_WELL_READ_FISH
 
-#include "Stream.h"
+#include "EventStream.h"
 #include "EventList.h"
 #include <list>
 #include <string>
@@ -12,36 +12,52 @@ class Event_ShowText : public Event
 {
 public:
 	std::string words;
-	Stream * parent;
-
-	DrawList * target;
+	EventStream * stream;
+	//TODO: needs link to owner, if sub-event?
 
 	TextEvent_Drawable drawable;
 
+	Event_ShowText( EventStream * stream = NULL, char * text = "", double when = 0 )
+	{
+		init( stream, text, when );
+	}
+
+	void init( EventStream * stream, char * text, double when )
+	{
+		this->stream = stream;
+		words = text;
+		this->when = when;
+	}
+
 	void activate()
 	{
-		target->add( drawable );
+		printf( "Activate TextShow Event: %s\n", words.c_str() );
+		drawable.setLabel( stream->name.c_str() );
+		drawable.setContent( words.c_str() );
+		stream->displayTarget->add( &drawable );
 	}
 
 	void deactivate()
 	{
-		drawable.remove();
+		printf( "Deactivate TextShow Event: %s\n", words.c_str() );
+		//stream->displayTarget->remove( &drawable );
+		drawable.removeFromParent();
 	}
 };
 
 class Event_TextAnnotation : public EventWithDuration
 {
 public:
-
-	//TODO: now needs draw target
-	DrawList * drawTarget;
+	
+	EventStream * stream;
 	Event_ShowText start;
 	EventInverse stop;
 	
 
-	Event_TextAnnotation( double startTime = 0, double stopTime = 0, char* text = "" )
+	Event_TextAnnotation( double startTime = 0, double stopTime = 0, char* text = "", EventStream * eventStream = NULL )
 	{
-		
+		this->stream = eventStream;
+
 		startEvent = &start;
 		stopEvent = &stop;
 
@@ -49,8 +65,14 @@ public:
 		stop.makeInverseOf( &start );
 		stop.when = stopTime;
 
+		start.stream = eventStream;
+
 		start.words = text;
 	}
+
+	void Event::activate()		{ start.activate();	}
+
+	void Event::deactivate()	{ stop.activate();	}
 
 };
 

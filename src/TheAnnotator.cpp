@@ -1,35 +1,58 @@
 #include "TheAnnotator.h"
 
-	bool TheAnnotator::addVideoStream( char* filename )
+	VideoStream * TheAnnotator::addVideoStream( char* filename )
 	{
 		VideoStream *video = new VideoStream();
 		bool didWork = video->open( filename );
 		if( ! didWork )
 		{
 			printf( "ERROR: Couldn't load video file: %s\n", filename );
-			return false;
+			return NULL;
 		}
 		
 		video_area.add( video->video );
 
 		streams.push_back( video );
 		updateLongestDuration( video->getDuration() );
-		return true;
+		return video;
 	}
 
-	bool TheAnnotator::addAudioStream( char* filename )
+	AudioStream * TheAnnotator::addAudioStream( char* filename )
 	{
 		AudioStream *audio = new AudioStream();
 		bool didWork = audio->open( filename );
 		if( ! didWork )
 		{
 			printf( "ERROR: couldn't load audio file: %s\n", filename );
-			return false;
+			return NULL;
 		}
 		
 		streams.push_back( audio );
 		updateLongestDuration( audio->getDuration() );
-		return true;
+		return audio;
+	}
+
+	EventStream * TheAnnotator::addEventStream( char* filename )
+	{
+
+		EventStream *events = new EventStream();
+		bool didWork = events->loadFromFile( filename );
+		if( ! didWork )
+		{
+			printf( "ERROR: couldn't load audio file: %s\n", filename );
+			return NULL;
+		}
+
+		//DEBUG//
+		events->name = "Test Text Event Stream";
+		//events->eventList.addEvent( new Event_ShowText( events, "A test.", 10) );
+		events->eventList.addEvent( new Event_TextAnnotation( 1000, 100000, "A Test Annotation", events ) );
+		events->eventList.addEvent( new Event_TextAnnotation( 50000, 51800, "How well did it save the calibration?", events ) );
+		//DEBUG//
+
+		streams.push_back( events );
+		return events;
+
 	}
 
 	//when adding streams, check to see if it is the new longest
@@ -94,6 +117,7 @@
 			internal_seek( seek_to );
 		}
 
+		//TODO: should update with 0 elapsed if not playing?
 		if( this->isPlaying )
 		{
 			//streams.
@@ -126,6 +150,7 @@
 								500 );
 
 		video_area.setPosition( 0, 0 );
+		text_area.setPosition( width - 320, 20 );
 
 		button_play.setSize( 40, 40 );
 		button_play.setPosition(	(width / 2) - (button_play.getBounds().width / 2), 

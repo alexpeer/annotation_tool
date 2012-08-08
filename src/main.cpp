@@ -28,10 +28,18 @@ int main()
 	TheAnnotator annotator;
 	annotator.resize( viewWidth, viewHeight );
 
+	//annotator.addVideoStream( "sample_for_annotator_00000.avi" );
 	annotator.addVideoStream( "test-eye_tracker.avi" );
 	//annotator.addAudioStream( "Gorillaz-Stylo-Alex-Metric-Remix.mp3" );
 	//annotator.addAudioStream( "test-eye_tracker.avi" );
-	annotator.addAudioStream( "test-eye_tracker.wav" );
+	AudioStream * testAudio = annotator.addAudioStream( "test-eye_tracker.wav" );
+
+	//TODO: add setting offset to config file load routine
+	testAudio->setOffset( 24000 );
+	
+	EventStream * testText = annotator.addEventStream( "test-eye_tracker_test_text.csv" );
+	testText->displayTarget = &(annotator.text_area);
+		//TODO: need to set a default in annotator, use it on stream create; then, use UI (drag / drop? config dialouge?) to set draw targets
 	
 	//annotator.play();
 

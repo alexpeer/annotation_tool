@@ -9,6 +9,12 @@ class Stream
 {
 public:
 
+	Stream()
+	{
+		offset = 0;
+		isPlaying = false;
+	}
+
 	virtual void play() = NULL;
 	virtual void stop() = NULL;
 
@@ -16,8 +22,16 @@ public:
 	virtual void update( double elapsed_milliseconds ) = NULL;
 
 	// all times should be in milliseconds
-	virtual double getDuration() = NULL;
+	virtual double getDuration() = NULL;			// TODO: change to getEndTime
 	virtual double getCurrentPosition() = NULL;
+
+	virtual void setOffset( double new_offset )
+	{
+		offset = new_offset;
+	}
+
+	double offset;
+	bool isPlaying;
 
 	enum StreamType
 	{
@@ -40,23 +54,34 @@ class VideoStream : public Stream
 public:
 	VideoStream()	{	type = VIDEO;	}
 
-	void play()	{	video.play();	}
-	void stop()	{	video.stop();	}
+	void play()	{	video.play();	isPlaying = true;	}
+	void stop()	{	video.stop();	isPlaying = false;	}
 	void seek( double milliseconds )
 	{
-		if( milliseconds > video.duration )
+		double seek_to_adj = milliseconds - offset;
+
+		if( seek_to_adj > video.duration )
 		{
 			video.stop();
 			return;
 		}
 
-		double result_millis = video.seek_millis( milliseconds );
-		if( result_millis < milliseconds - video.millis_per_frame ||
-			result_millis > milliseconds)
+		if( seek_to_adj < 0 )
+		{
+			video.stop();
+			return;
+		}
+
+		double result_millis = video.seek_millis( seek_to_adj );
+		if( result_millis < seek_to_adj - video.millis_per_frame ||
+			result_millis > seek_to_adj)
 		// we're allowed to be back by a frame (it should handle the difference internally), but forward could be a problem
 		{
-			printf( "WARNING: video stream seek: %s\n\tresult not exact, off by: %f\n", video.name.c_str(), result_millis - milliseconds );
+			printf( "WARNING: video stream seek: %s\n\tresult not exact, off by: %f\n", video.name.c_str(), result_millis - seek_to_adj );
 		}
+
+		if( isPlaying )			video.play();
+		else					video.stop();
 	}
 
 	void update( double elapsed_milliseconds )
@@ -64,8 +89,8 @@ public:
 		video.update( elapsed_milliseconds );
 	}
 
-	double getDuration()		{	return video.duration;	}
-	double getCurrentPosition()	{	return video.location;	}
+	double getDuration()		{	return offset + video.duration;	}
+	double getCurrentPosition()	{	return offset + video.location;	}
 
 	bool open( char* filename )
 	{
@@ -84,40 +109,72 @@ public:
 
 	double curr_pos; // maintain here, to workaround "always play on seek" bug
 
-	void play() {	audio.setPlayingOffset( sf::milliseconds( curr_pos ) );	}
-	void stop()	{	audio.pause();	}
+	void play() 
+	{	
+		isPlaying = true;
+
+		double seek_to_adj = curr_pos - offset;
+		if( seek_to_adj > 0 )
+			audio.setPlayingOffset( sf::milliseconds( seek_to_adj ) ); 
+		else
+			audio.pause();
+	}
+	void stop()	{	audio.pause(); isPlaying = false;	}
 	void seek( double milliseconds )
 	{
-		if( milliseconds > audio.getDuration().asMilliseconds() )
-		{	audio.stop();
+		double seek_to_adj = milliseconds - offset;
+
+		if( seek_to_adj > audio.getDuration().asMilliseconds() )
+		{	
+			curr_pos = milliseconds;
+			audio.stop();
 			return;
 		}
 
-		bool wasPaused = false;
+		if( seek_to_adj < 0 )
+		{
+			curr_pos = milliseconds;
+			audio.stop();
+			return;
+		}
 
+		//bool wasPaused = false;
 		sf::SoundSource::Status status = audio.getStatus();
 		//have to be paused or playing before we can seek
 		if( status == sf::SoundSource::Status::Stopped )
 		{	
-			//audio.play();
+		//	//audio.play();
 			audio.pause();
-
-			wasPaused = true;
+		//
+		//	wasPaused = true;
 		}
-		if( status == sf::SoundSource::Status::Paused )
-			wasPaused = true;
+		//if( status == sf::SoundSource::Status::Paused )
+		//	wasPaused = true;
 
-		//audio.setPlayingOffset( sf::milliseconds( milliseconds ) );
-		audio.pause();
+		//audio.setPlayingOffset( sf::milliseconds( seek_to_adj ) );
+		//audio.pause();
+
+		if( isPlaying )			audio.setPlayingOffset( sf::milliseconds( seek_to_adj ) );//audio.play();
+		//else					audio.pause();
 
 		curr_pos = milliseconds;
 	}
 
 	void update( double elapsed_milliseconds )
-	{	curr_pos += elapsed_milliseconds;	}
+	{	
+		if( curr_pos - offset < 0 && curr_pos - offset + elapsed_milliseconds > 0 )
+			seek( curr_pos + elapsed_milliseconds );
+		curr_pos += elapsed_milliseconds;
+	}
 
-	double getDuration()		{	return audio.getDuration().asMilliseconds();		}
-	double getCurrentPosition()	{	return audio.getPlayingOffset().asMilliseconds();	}
+	void setOffset( double new_offset )
+	{
+		offset = new_offset;
+		seek( curr_pos );
+	}
+
+	double getDuration()		{	return offset + audio.getDuration().asMilliseconds();		}
+	double getCurrentPosition()	{	return offset + audio.getPlayingOffset().asMilliseconds();	}
 	
 	bool open( char* filename )
 	{

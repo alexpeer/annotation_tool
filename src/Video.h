@@ -78,7 +78,7 @@ public:
 		if( result == false )
 		{
 			isLoaded = false;
-			printf( "ERROR: Could not load video file: %s", filename );
+			printf( "ERROR: Could not load video file: %s\n", filename );
 			return false;
 		}
 

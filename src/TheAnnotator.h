@@ -15,6 +15,8 @@
 
 #include "ui-annotator\Buttons.h"
 
+#include "EventStream.h"
+
 #include <list>
 
 class TheAnnotator
@@ -25,9 +27,9 @@ public:
 	std::list<Stream*> streams;
 	bool isPlaying;
 
-	bool addVideoStream( char* filename );
-
-	bool addAudioStream( char* filename );
+	VideoStream * addVideoStream( char* filename );
+	AudioStream * addAudioStream( char* filename );
+	EventStream * addEventStream( char* filename );
 
 	//when adding streams, check to see if it is the new longest
 	void updateLongestDuration( double newDuration );

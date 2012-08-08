@@ -27,6 +27,8 @@ public:
 		add( &background );
 		add( &words );
 
+		fixedWidth = -1;
+
 	}
 
 	void setText( const char* new_text )
@@ -45,10 +47,13 @@ public:
 		float padding = 8;
 
 		sf::FloatRect bounds = words.sf.getLocalBounds();
-		background.sf.setSize( sf::Vector2f( bounds.width + padding, bounds.height + padding ) );
 
-		width = bounds.width + padding;
-		height = bounds.height + padding;
+		if( fixedWidth > 0 )	width = fixedWidth;
+		else					width = bounds.width + padding;
+		height = bounds.height + (bounds.height * 0.2) + padding;
+			// added 20% more, as text height always seems to be underestimated
+
+		background.sf.setSize( sf::Vector2f( width, height ) );
 
 		words.setPosition( padding / 2, padding / 2 );
 
@@ -63,6 +68,8 @@ public:
 	Text words;
 
 	float width, height;
+
+	float fixedWidth;
 
 private:
 /*

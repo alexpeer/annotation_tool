@@ -4,28 +4,26 @@
 
 	LinkListable::LinkListable()
 	{
-		owner = NULL;
+		parent = NULL;
 
 		prev = NULL;
 		next = NULL;
 	}
 
-	void LinkListable::remove()
+	void LinkListable::removeFromParent()
 	{
-		if(this->owner == NULL)
+		if(this->parent == NULL)
 			return;
 
-		next->prev = prev;
-		prev->next = next;
+		if( next )	next->prev = prev;
+		if( prev )	prev->next = next;
 		//notify Reaper of orphan? //TODO: invent Reaper
 
-		if( owner->head == this )
-			owner->head = NULL;
-		if( owner->tail == this )
-			owner->tail = NULL;
-		owner->size--;
+		if( parent->head == this )		parent->head = next;
+		if( parent->tail == this )		parent->tail = prev;
+		parent->size--;
 
-		this->owner = NULL;
+		this->parent = NULL;
 	}
 
 /*	void LinkListable::append( LinkListable *thing )
@@ -70,7 +68,7 @@
 
 	void LinkList::add( LinkListable *thing )
 	{		
-		thing->remove();
+		thing->removeFromParent();
 
 		if(head == NULL)
 		{	head = thing;
@@ -82,18 +80,22 @@
 			tail = thing;
 		}
 
-		thing->owner = this;
+		thing->parent = this;
 		size++;
 	}
 
 	void LinkList::remove( LinkListable *thing )
 	{
+		if( this != thing->parent )
+			return;
+
+		thing->removeFromParent();
+		/*
 		if( head == thing )		{	head = thing->next;		}
 		if( tail == thing )		{	tail = thing->prev;		}
 
-		thing->remove();
-
 		size--;
+		*/
 	}
 
 	void LinkList::empty( )
@@ -105,7 +107,7 @@
 		{
 			farewell = cursor;
 			cursor = cursor->next;
-			farewell->remove();
+			farewell->removeFromParent();
 		}
 
 		head = NULL;
@@ -120,7 +122,7 @@
 	sf::Vector2f Drawable::getParentPosition()
 	{
 
-		DrawList* parent = (DrawList*) owner;
+		DrawList* parent = (DrawList*) parent;
 
 		sf::Vector2f parentPos;
 		parentPos.x = 0;
