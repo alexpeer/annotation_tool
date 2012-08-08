@@ -46,7 +46,7 @@
 		//DEBUG//
 		events->name = "Test Text Event Stream";
 		//events->eventList.addEvent( new Event_ShowText( events, "A test.", 10) );
-		events->eventList.addEvent( new Event_TextAnnotation( 1000, 100000, "A Test Annotation", events ) );
+		//events->eventList.addEvent( new Event_TextAnnotation( 1000, 100000, "A Test Annotation", events ) );
 		events->eventList.addEvent( new Event_TextAnnotation( 50000, 51800, "How well did it save the calibration?", events ) );
 		//DEBUG//
 

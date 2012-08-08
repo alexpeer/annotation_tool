@@ -116,6 +116,8 @@
 	}
 
 	LinkListable* LinkList::getHead() const		{	return head;	}
+	
+	LinkListable* LinkList::getTail() const		{	return tail;	}
 
 //:::::::: Drawable
 		

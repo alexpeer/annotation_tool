@@ -31,9 +31,9 @@ friend class LinkListable;
 public:
 	LinkList();
 
-	void add( LinkListable *thing );
+	virtual void add( LinkListable *thing );
 
-	void add( LinkListable &thing )
+	virtual void add( LinkListable &thing )
 	{
 		add( &thing );
 	}
@@ -43,6 +43,7 @@ public:
 	void empty( );
 
 	LinkListable* getHead() const;
+	LinkListable* getTail() const;
 
 private:
 	LinkListable *head, *tail;
@@ -101,6 +102,15 @@ public:
 		name = "Drawlist";
 		visible = true;
 		areChildrenMousable = true;	
+	}
+
+	virtual void add( Drawable *thing )
+	{
+		LinkList::add( thing );
+	}
+	virtual void add( Drawable &thing )
+	{
+		LinkList::add( &thing );
 	}
 
 	bool areChildrenMousable;

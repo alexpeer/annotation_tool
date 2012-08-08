@@ -117,7 +117,7 @@ public:
 		if( seek_to_adj > 0 )
 			audio.setPlayingOffset( sf::milliseconds( seek_to_adj ) ); 
 		else
-			audio.pause();
+			audio.stop();
 	}
 	void stop()	{	audio.pause(); isPlaying = false;	}
 	void seek( double milliseconds )

@@ -46,10 +46,10 @@ public:
 	sf::FloatRect getBounds()
 	{
 		//TODO: this is ugly and fragile, quickly hacked together; would just using a DrawList be fast enough, considering these are made in the draw loop?
-//		sf::FloatRect bounds;
-//		bounds = label.getBounds();
-//		bounds.height += content.getBounds().height;
-//		bounds.width = max( label.getBounds().width + content.getBounds().width );
+		sf::FloatRect bounds;
+		bounds = label.getBounds();
+		bounds.height += content.getBounds().height;
+		bounds.width = content.fixedWidth;
 		return sf::FloatRect();
 	}
 	sf::FloatRect getClickBounds()
@@ -79,11 +79,24 @@ public:
 	{
 		width = w;
 		height = h;
+	}
 
-		//bg.setSize( w, h );
-		//bg.setColor( 255, 0, 0 );
+	void add( Drawable * thing )
+	{
+		double newY = 20;
+		if( getTail() != NULL)
+		{
+			sf::Vector2f pos = ((Drawable*)getTail())->getPosition();
+			double height = ((Drawable*)getTail())->getHeight();
+			newY = pos.y + height + 20;
+		}
 
-		//add( bg );
+		thing->setPosition( 0, newY );
+		DrawList::add( thing );
+	}
+	void add( Drawable & thing )
+	{
+		add( &thing );
 	}
 
 };
