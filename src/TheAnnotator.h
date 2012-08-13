@@ -1,3 +1,5 @@
+//    Copyright Alex Peer 2012.
+//
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
@@ -15,6 +17,8 @@
 #define THEANNOTATOR_OFTEN_SEES_THE_UNEXPECTED
 
 #include <SFML/Graphics.hpp>
+
+#include "Reader_MobileEye.h"
 
 #include "generic-ui\ui.h"
 

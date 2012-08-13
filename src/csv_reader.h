@@ -1,3 +1,6 @@
+#ifndef CSVREADER_WHICH_YOU_REMEMBER_ARE_A_SPECIES_OF_WHALE
+#define CSVREADER_WHICH_YOU_REMEMBER_ARE_A_SPECIES_OF_WHALE
+
 //          Copyright Alex Peer, 2012.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -169,3 +172,5 @@ private:
 	std::vector< CSVRow > rows;
 
 };
+
+#endif
