@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EventStream.cpp" />
     <ClCompile Include="src\generic-ui\Drawable.cpp" />
     <ClCompile Include="src\generic-ui\Mousable.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -19,11 +20,15 @@
     <ClCompile Include="src\ui-annotator\Buttons.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EventList.h" />
+    <ClInclude Include="src\EventStream.h" />
     <ClInclude Include="src\generic-ui\BoxWithText.h" />
     <ClInclude Include="src\generic-ui\Drawable.h" />
     <ClInclude Include="src\generic-ui\Mousable.h" />
     <ClInclude Include="src\generic-ui\ui.h" />
     <ClInclude Include="src\Stream.h" />
+    <ClInclude Include="src\TextArea.h" />
+    <ClInclude Include="src\TextStream.h" />
     <ClInclude Include="src\TheAnnotator.h" />
     <ClInclude Include="src\Timeline.h" />
     <ClInclude Include="src\ui-annotator\Buttons.h" />

@@ -1,3 +1,16 @@
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef BUTTON_PLAY_CHOOSES_NOT_TO_HATE_THE_GAME_OR_THE_PLAYER
 #define BUTTON_PLAY_CHOOSES_NOT_TO_HATE_THE_GAME_OR_THE_PLAYER
 
@@ -11,7 +24,9 @@ public:
 
 	//TODO: this really needs to be a toggle
 
-	Sprite bg;
+	Sprite bg_over;
+	Sprite bg_off;
+	Sprite bg_down;
 	RectangleShape box;
 	TheAnnotator * theBoss;
 
@@ -19,13 +34,17 @@ public:
 
 	Button_Play( )
 	{
-		bg.loadImage( "./resources/play.jpg" );
+		bg_over.loadImage( "./resources/play_over.png" );
+		bg_off.loadImage( "./resources/play_off.png" );
+		bg_down.loadImage( "./resources/play_down.png" );
 
-		off = &bg;
-		down = &bg;
-		over = &bg;
+		off = &bg_off;
+		down = &bg_down;
+		over = &bg_over;
 
-		add( bg );
+		add( bg_off );
+		add( bg_down );
+		add( bg_over );
 
 		setSize( 40, 40 );
 		//add( box );
@@ -39,7 +58,9 @@ public:
 	{
 		width = w;
 		height = h;
-		bg.setSize( width, height );
+		bg_over.setSize( width, height );
+		bg_off.setSize( width, height );
+		bg_down.setSize( width, height );
 	}
 
 	void onMouseClick( MouseEvent &e );
